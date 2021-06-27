@@ -14,6 +14,11 @@ import {
     useColorModeValue,
     useBreakpointValue,
     useDisclosure,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
+    Spacer,
 } from '@chakra-ui/react';
 import {
     HamburgerIcon,
@@ -21,12 +26,16 @@ import {
     ChevronDownIcon,
     ChevronRightIcon,
 } from '@chakra-ui/icons';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { ReactComponent as UserIcon } from '../images/user.svg';
+import { ReactComponent as ExitIcon } from '../images/exit.svg';
+import { ReactComponent as PostIcon } from '../images/post.svg';
 
 export default function WithSubnavigation() {
     const { isOpen, onToggle } = useDisclosure();
-    const { currentUser } = useAuth();
+    const { currentUser, logout } = useAuth();
+    const history = useHistory();
 
     return (
         <Box>
@@ -88,7 +97,49 @@ export default function WithSubnavigation() {
                     spacing={6}
                 >
                     {currentUser ? (
-                        <></>
+                        <>
+                            <Menu>
+                                <MenuButton
+                                    as={IconButton}
+                                    aria-label="user"
+                                    icon={
+                                        <UserIcon
+                                            style={{
+                                                backgroundColor: 'white',
+                                            }}
+                                        />
+                                    }
+                                />
+                                <MenuList>
+                                    <MenuItem onClick={logout}>
+                                        <Flex
+                                            width="inherit"
+                                            justifyContent="center"
+                                        >
+                                            <Text>Log Out</Text>
+                                            <Spacer />
+                                            <ExitIcon />
+                                        </Flex>
+                                    </MenuItem>
+                                    <MenuItem
+                                        onClick={() =>
+                                            history.push(
+                                                `/posts/${currentUser.uid}`,
+                                            )
+                                        }
+                                    >
+                                        <Flex
+                                            width="inherit"
+                                            justifyContent="center"
+                                        >
+                                            <Text>My Posts</Text>
+                                            <Spacer />
+                                            <PostIcon />
+                                        </Flex>
+                                    </MenuItem>
+                                </MenuList>
+                            </Menu>
+                        </>
                     ) : (
                         <>
                             <Button
@@ -243,7 +294,8 @@ const MobileNavItem = ({ label, children, to }: NavItem) => {
         <Stack spacing={4} onClick={children && onToggle}>
             <Flex
                 py={2}
-                as={() => <StyledLink as={Link} to={to ?? '/'} />}
+                as={Link}
+                to={to ?? '/'}
                 justify={'space-between'}
                 align={'center'}
                 _hover={{
