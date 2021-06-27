@@ -22,9 +22,11 @@ import {
     ChevronRightIcon,
 } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function WithSubnavigation() {
     const { isOpen, onToggle } = useDisclosure();
+    const { currentUser } = useAuth();
 
     return (
         <Box>
@@ -34,7 +36,7 @@ export default function WithSubnavigation() {
                 minH={'60px'}
                 py={{ base: 2 }}
                 px={{ base: 4 }}
-                borderBottom={1}
+                borderBottom={0}
                 borderStyle={'solid'}
                 borderColor={useColorModeValue('gray.200', 'gray.900')}
                 align={'center'}
@@ -85,26 +87,32 @@ export default function WithSubnavigation() {
                     direction={'row'}
                     spacing={6}
                 >
-                    <Button
-                        as={Link}
-                        fontSize={'sm'}
-                        fontWeight={400}
-                        variant={'link'}
-                        to="/signin"
-                    >
-                        Sign In
-                    </Button>
+                    {currentUser ? (
+                        <></>
+                    ) : (
+                        <>
+                            <Button
+                                as={Link}
+                                fontSize={'sm'}
+                                fontWeight={400}
+                                variant={'link'}
+                                to="/signin"
+                            >
+                                Sign In
+                            </Button>
 
-                    <Button
-                        as={Link}
-                        display={{ base: 'none', md: 'inline-flex' }}
-                        fontSize={'sm'}
-                        fontWeight={600}
-                        colorScheme={'primary'}
-                        to="/signup"
-                    >
-                        Sign Up
-                    </Button>
+                            <Button
+                                as={Link}
+                                display={{ base: 'none', md: 'inline-flex' }}
+                                fontSize={'sm'}
+                                fontWeight={600}
+                                colorScheme={'primary'}
+                                to="/signup"
+                            >
+                                Sign Up
+                            </Button>
+                        </>
+                    )}
                 </Stack>
             </Flex>
 
