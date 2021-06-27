@@ -19,12 +19,14 @@ import {
     MenuItem,
     MenuList,
     Spacer,
+    Tooltip,
 } from '@chakra-ui/react';
 import {
     HamburgerIcon,
     CloseIcon,
     ChevronDownIcon,
     ChevronRightIcon,
+    AddIcon,
 } from '@chakra-ui/icons';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -98,6 +100,15 @@ export default function WithSubnavigation() {
                 >
                     {currentUser ? (
                         <>
+                            <Tooltip label="Create Post">
+                                <IconButton
+                                    aria-label="Create Post"
+                                    background="inherit"
+                                    icon={<AddIcon color="secondary.400" />}
+                                    as={Link}
+                                    to="/create-post"
+                                />
+                            </Tooltip>
                             <Menu>
                                 <MenuButton
                                     as={IconButton}

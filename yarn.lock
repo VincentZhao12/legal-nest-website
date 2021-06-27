@@ -2111,6 +2111,11 @@
   "resolved" "https://registry.npmjs.org/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.5.0.tgz"
   "version" "0.5.0"
 
+"@fontsource/alex-brush@^4.4.5":
+  "integrity" "sha512-sA6OdAPrvpwadce1ZO2vROZPaFYn2PrHkUft1okGrZhQbCrepJGqZkRPPuYCR5p3nKHgnuauxqPLY0sqiUhrYQ=="
+  "resolved" "https://registry.npmjs.org/@fontsource/alex-brush/-/alex-brush-4.4.5.tgz"
+  "version" "4.4.5"
+
 "@fontsource/roboto@^4.4.5":
   "integrity" "sha512-e3s7BF8MDBLpkA2r6lnl5PMnllF0McVvpolK9h2zzvVJw2WPexP1GTgMKHISlglYZRij2lKg/ZjQcIUUYDsAXg=="
   "resolved" "https://registry.npmjs.org/@fontsource/roboto/-/roboto-4.4.5.tgz"

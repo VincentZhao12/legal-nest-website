@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '../contexts/AuthContext';
 import theme from '../theme';
+import '@fontsource/roboto';
 
 interface ContextProvidersProps {}
 
