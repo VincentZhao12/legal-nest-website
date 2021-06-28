@@ -135,7 +135,7 @@ export default function WithSubnavigation() {
                                     <MenuItem
                                         onClick={() =>
                                             history.push(
-                                                `/posts/${currentUser.uid}`,
+                                                `/feed/${currentUser.uid}`,
                                             )
                                         }
                                     >
