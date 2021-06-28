@@ -5,6 +5,9 @@ import {
     FormLabel,
     Heading,
     Input,
+    Radio,
+    RadioGroup,
+    Tab,
     TabList,
     TabPanel,
     TabPanels,
@@ -15,7 +18,6 @@ import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { db, storage } from '../firebase';
-
 interface CreatePostProps {}
 
 const CreatePost: FC<CreatePostProps> = () => {
@@ -24,11 +26,32 @@ const CreatePost: FC<CreatePostProps> = () => {
     const [desc, setDesc] = useState<string>();
     const { currentUser } = useAuth();
     const [loading, setLoading] = useState(false);
+    const [userVideos, setUserVideos] = useState<string[]>();
+    const [selectedVideo, setSelectedVideo] = useState<string>('');
+    const [videoType, setVideoType] = useState<'upload' | 'existing'>('upload');
 
     const history = useHistory();
 
     useEffect(() => {
         if (!currentUser) history.push('/');
+
+        const getUserVideos = async () => {
+            const folderRef = storage.ref().child(`/${currentUser?.uid}`);
+
+            const itemsRef = await folderRef.listAll();
+
+            const videoUrls = await Promise.all(
+                itemsRef.items.map(
+                    async (video) => await video.getDownloadURL(),
+                ),
+            );
+
+            setUserVideos(videoUrls || []);
+
+            console.log(videoUrls);
+        };
+
+        getUserVideos();
     }, []);
 
     const handleSubmit = async (e: FormEvent) => {
@@ -36,17 +59,25 @@ const CreatePost: FC<CreatePostProps> = () => {
 
         setLoading(true);
 
-        const newDoc = db.collection('posts').doc();
-        const videoRef = storage.ref(`${currentUser?.uid}/${newDoc.id}`);
+        const id = `${Date.now()}`;
 
-        const uploadResult = await videoRef.put(file);
+        const newDoc = db.collection('posts').doc(id);
 
-        const download = await uploadResult.ref.getDownloadURL();
+        let url: string = '';
+
+        if (videoType === 'upload') {
+            const videoRef = storage.ref(`${currentUser?.uid}/${Date.now()}`);
+
+            const uploadResult = await videoRef.put(file);
+            url = await uploadResult.ref.getDownloadURL();
+        } else {
+            url = selectedVideo;
+        }
 
         await newDoc.set({
-            id: newDoc.id,
+            posted: id,
             creator: currentUser?.uid,
-            url: download,
+            url,
             title,
             description: desc,
         });
@@ -77,8 +108,15 @@ const CreatePost: FC<CreatePostProps> = () => {
                 </FormControl>
                 <FormControl>
                     <FormLabel>Choose a Video</FormLabel>
-                    <Tabs>
-                        <TabList></TabList>
+                    <Tabs isFitted>
+                        <TabList>
+                            <Tab onClick={() => setVideoType('upload')}>
+                                Upload a video
+                            </Tab>
+                            <Tab onClick={() => setVideoType('existing')}>
+                                Choose an existing video
+                            </Tab>
+                        </TabList>
                         <TabPanels>
                             <TabPanel>
                                 <input
@@ -93,7 +131,35 @@ const CreatePost: FC<CreatePostProps> = () => {
                                     }}
                                 />
                             </TabPanel>
-                            <TabPanel></TabPanel>
+
+                            <TabPanel>
+                                <RadioGroup
+                                    onChange={(e) => setSelectedVideo(e)}
+                                >
+                                    {userVideos?.map((video) => (
+                                        <Radio
+                                            value={video}
+                                            key={video}
+                                            defaultValue={userVideos[0]}
+                                        >
+                                            <video
+                                                src={video}
+                                                controls
+                                                style={{
+                                                    height: '300px',
+                                                    border: 'solid',
+                                                    borderColor: '#2a9d8f',
+                                                    borderWidth:
+                                                        video === selectedVideo
+                                                            ? '5px'
+                                                            : '0px',
+                                                }}
+                                            />
+                                        </Radio>
+                                    ))}
+                                    <Radio value="">None</Radio>
+                                </RadioGroup>
+                            </TabPanel>
                         </TabPanels>
                     </Tabs>
                 </FormControl>
