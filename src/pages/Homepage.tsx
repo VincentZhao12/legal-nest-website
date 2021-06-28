@@ -15,7 +15,7 @@ interface HomepageProps {}
 
 const Homepage: FC<HomepageProps> = () => {
     return (
-        <Flex minH="100vh" direction="row" color="white">
+        <Flex height="100%" direction="row" color="white">
             <Center flex="4" bg="tomato" color="white">
                 <VStack>
                     <Text fontSize="3xl" fontWeight="bold">
