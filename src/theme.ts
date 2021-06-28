@@ -50,6 +50,15 @@ const theme = extendTheme({
             500: '#d72414',
         },
     },
+    components: {
+        Link: {
+            variants: {
+                "secondary300": {
+                    color: "secondary.300"
+                }
+            }
+        }
+    }
 });
 
 export default theme;

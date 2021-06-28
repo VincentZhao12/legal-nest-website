@@ -62,7 +62,7 @@ const Signup: FC<SignupProps> = () => {
         <VStack
             align={'center'}
             justify={'center'}
-            bg={useColorModeValue('gray.50', 'gray.800')}
+            // bg={useColorModeValue('gray.50', 'gray.800')}
         >
             {error && (
                 <Stack align={'center'}>
@@ -134,11 +134,11 @@ const Signup: FC<SignupProps> = () => {
                             <Text>
                                 Already have an account?{' '}
                                 <StyledLink
-                                    color="special.300"
+                                    variant="secondary300"
                                     as={Link}
-                                    to="/login"
+                                    to="/signin"
                                 >
-                                    Log In
+                                    Log in
                                 </StyledLink>
                             </Text>
                         </Stack>

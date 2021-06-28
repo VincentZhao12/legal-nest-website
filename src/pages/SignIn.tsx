@@ -106,11 +106,11 @@ const SignIn: FC<SignInProps> = () => {
                             <Text>
                                 Don't have an account?{' '}
                                 <StyledLink
-                                    color="secondary.300"
+                                    variant="secondary300"
                                     as={Link}
                                     to="/signup"
                                 >
-                                    Sign Up
+                                    Sign up
                                 </StyledLink>
                             </Text>
                         </Stack>
