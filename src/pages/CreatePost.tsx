@@ -47,8 +47,6 @@ const CreatePost: FC<CreatePostProps> = () => {
             );
 
             setUserVideos(videoUrls || []);
-
-            console.log(videoUrls);
         };
 
         getUserVideos();
@@ -75,14 +73,15 @@ const CreatePost: FC<CreatePostProps> = () => {
         }
 
         await newDoc.set({
-            posted: id,
+            posted: new Date(Date.now()),
             creator: currentUser?.uid,
             url,
             title,
             description: desc,
+            supports: 0,
         });
 
-        history.push('/my-posts');
+        history.push(`/feed/${currentUser?.uid}`);
     };
 
     return (
@@ -135,12 +134,22 @@ const CreatePost: FC<CreatePostProps> = () => {
                             <TabPanel>
                                 <RadioGroup
                                     onChange={(e) => setSelectedVideo(e)}
+                                    value={selectedVideo}
                                 >
+                                    <Radio value="">None</Radio>
                                     {userVideos?.map((video) => (
                                         <Radio
                                             value={video}
                                             key={video}
                                             defaultValue={userVideos[0]}
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            width="100%"
+                                            onSelect={() => {
+                                                if (video === selectedVideo)
+                                                    setSelectedVideo('');
+                                                else setSelectedVideo(video);
+                                            }}
                                         >
                                             <video
                                                 src={video}
@@ -157,7 +166,6 @@ const CreatePost: FC<CreatePostProps> = () => {
                                             />
                                         </Radio>
                                     ))}
-                                    <Radio value="">None</Radio>
                                 </RadioGroup>
                             </TabPanel>
                         </TabPanels>
