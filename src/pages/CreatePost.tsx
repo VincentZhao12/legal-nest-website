@@ -57,29 +57,32 @@ const CreatePost: FC<CreatePostProps> = () => {
 
         setLoading(true);
 
-        const id = `${Date.now()}`;
-
-        const newDoc = db.collection('posts').doc(id);
+        const newDoc = db.collection('posts').doc();
 
         let url: string = '';
+        try {
+            if (videoType === 'upload') {
+                const videoRef = storage.ref(
+                    `${currentUser?.uid}/${Date.now()}`,
+                );
 
-        if (videoType === 'upload') {
-            const videoRef = storage.ref(`${currentUser?.uid}/${Date.now()}`);
+                const uploadResult = await videoRef.put(file);
+                url = await uploadResult.ref.getDownloadURL();
+            } else {
+                url = selectedVideo;
+            }
 
-            const uploadResult = await videoRef.put(file);
-            url = await uploadResult.ref.getDownloadURL();
-        } else {
-            url = selectedVideo;
+            await newDoc.set({
+                posted: new Date(Date.now()),
+                creator: currentUser?.uid,
+                video: url,
+                title,
+                description: desc,
+                supports: 0,
+            });
+        } catch (e) {
+            console.log(e);
         }
-
-        await newDoc.set({
-            posted: new Date(Date.now()),
-            creator: currentUser?.uid,
-            url,
-            title,
-            description: desc,
-            supports: 0,
-        });
 
         history.push(`/feed/${currentUser?.uid}`);
     };

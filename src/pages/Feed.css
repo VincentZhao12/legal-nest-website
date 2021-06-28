@@ -1,0 +1,6 @@
+.container {
+    scroll-snap-type: y proximity;
+}
+.child {
+    scroll-snap-align: center;
+}
