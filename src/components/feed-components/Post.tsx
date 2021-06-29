@@ -18,7 +18,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useEffect } from 'react';
 import firebase, { db } from '../../firebase';
 import { Link } from 'react-router-dom';
-import { AiOutlineHeart } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { prependOnceListener } from 'process';
 
 interface PostProps {
     post: PostType;
@@ -53,14 +54,19 @@ const Post: FC<PostProps> = ({ post }) => {
         checkSupported();
     }, [post]);
 
-    const handleSupport = () => {
+    const handleClick = () => {
+        setSupported(!supported);
+        
+        if(supported) // was supported before
+            post.supports -= 1;
+        else
+            post.supports += 1;
+        
         db.collection('posts')
             .doc(post.id)
             .update({
-                supports: supported ? post.supports - 1 : post.supports + 1,
+                supports: post.supports,
             });
-        let supporteds = postsSupported;
-        // if (supported) supporteds;
     };
 
     return (
@@ -82,7 +88,7 @@ const Post: FC<PostProps> = ({ post }) => {
                     fontWeight="bold"
                 >
                     <Text mr="8px" fontSize="3xl">{post.supports}</Text>
-                    <Icon as={AiOutlineHeart}></Icon>
+                    <Icon onClick={handleClick} fill="#f13e2d" as={supported ? AiFillHeart : AiOutlineHeart}></Icon>
                 </Center>
 
                 <Grid

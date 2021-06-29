@@ -190,6 +190,7 @@ const CreatePost: FC<CreatePostProps> = () => {
                         type="submit"
                         width="100%"
                         marginTop="2"
+                        marginBottom="16px"
                         colorScheme="primary"
                         isLoading={loading}
                     >
