@@ -30,14 +30,18 @@ const SignIn: FC<SignInProps> = () => {
     const { login } = useAuth();
     const [error, setError] = useState('');
     const history = useHistory();
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleSubmit = () => {
+        setLoading(true);
         setError('');
         login(email, pass)
             .then(() => {
                 history.push('/');
+                setLoading(false);
             })
             .catch((error: firebase.auth.AuthError) => {
+                setLoading(false);
                 if (error.code === 'auth/invalid-email')
                     setError('You did not enter a valid Email');
                 else if (error.code === 'auth/user-not-found')
@@ -70,13 +74,7 @@ const SignIn: FC<SignInProps> = () => {
                 </Heading>
             </Container>
             <Stack align={'center'}>
-                <Box
-                    rounded={'lg'}
-                    bg={useColorModeValue('white', 'gray.700')}
-                    boxShadow={'lg'}
-                    p={8}
-                    minWidth="xs"
-                >
+                <Box rounded={'lg'} boxShadow={'lg'} p={8} minWidth="xs">
                     <Stack spacing={4}>
                         <FormControl id="email">
                             <FormLabel>Email address</FormLabel>
@@ -98,6 +96,7 @@ const SignIn: FC<SignInProps> = () => {
                             <Button
                                 colorScheme="primary"
                                 onClick={handleSubmit}
+                                isLoading={loading}
                             >
                                 Sign in
                             </Button>
@@ -106,7 +105,7 @@ const SignIn: FC<SignInProps> = () => {
                             <Text>
                                 Don't have an account?{' '}
                                 <StyledLink
-                                    color="secondary.300"
+                                    color="other.300"
                                     as={Link}
                                     to="/signup"
                                 >

@@ -16,7 +16,7 @@ const Routes: FC<RoutesProps> = () => {
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/rights" component={LearnRights} />
-            <Route exact path="/create-post" component={CreatePost} />
+            {/* <Route exact path="/create-post" component={CreatePost} /> */}
             <Route exact path="/feed/:uid" component={Feed} />
             <Route exact path="/feed" component={Feed} />
         </>

@@ -1,6 +1,7 @@
 import { Container } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { useEffect } from 'react';
+import { HashRouter, Link, Route } from 'react-router-dom';
 import Post from '../components/feed-components/Post';
 import { FeedParams, Match } from '../components/Routes';
 import firebase, { db } from '../firebase';
@@ -51,13 +52,14 @@ const Feed: FC<FeedProps> = ({ match }) => {
     return (
         <Container
             width="100%"
-            // height="100%"
             maxWidth="100%"
             centerContent
             justifyContent="center"
-            overflowY="auto"
-            style={{ scrollSnapType: 'mandatory' }}
             className="container"
+            overflowX="hidden"
+            overflowY="hidden"
+            margin="0"
+            padding="0"
         >
             {posts.map((post, index) => (
                 <Post post={post} key={index} />

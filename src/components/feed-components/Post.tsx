@@ -1,4 +1,5 @@
 import {
+    AspectRatio,
     Box,
     Grid,
     GridItem,
@@ -7,6 +8,8 @@ import {
     Icon,
     Stack,
     Text,
+    Center,
+    Button,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { PostType } from '../../pages/Feed';
@@ -15,82 +18,125 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useEffect } from 'react';
 import firebase, { db } from '../../firebase';
 import { Link } from 'react-router-dom';
+import { AiOutlineHeart } from 'react-icons/ai';
 
 interface PostProps {
     post: PostType;
 }
 
 const Post: FC<PostProps> = ({ post }) => {
-    const { currentUser } = useAuth();
     const [username, setUsername] = useState<string>('');
+    const [supported, setSupported] = useState<boolean>(false);
+    const [postsSupported, setPostsSupported] = useState();
+    const { currentUser } = useAuth();
 
     useEffect(() => {
         const getUsername = async () => {
             const userDoc = await db
                 .collection('users')
-                .doc(currentUser?.uid)
+                .doc(post.creator)
                 .get();
             setUsername(userDoc.data()?.screenName);
         };
+        const checkSupported = async () => {
+            const userDoc = await db
+                .collection('users')
+                .doc(currentUser?.uid)
+                .get();
+            // setSupported(
+            //     userDoc.data()?.postsSupported.includes(currentUser?.uid),
+            // );
+            setPostsSupported(userDoc.data()?.postsSupported);
+        };
         getUsername();
-    }, [post, currentUser]);
+        checkSupported();
+    }, [post]);
+
+    const handleSupport = () => {
+        db.collection('posts')
+            .doc(post.id)
+            .update({
+                supports: supported ? post.supports - 1 : post.supports + 1,
+            });
+        let supporteds = postsSupported;
+        // if (supported) supporteds;
+    };
 
     return (
         <Box
-            height="80vh"
-            width="85%"
+            height="75vh"
+            width="60%"
             border="solid"
             borderColor="other.400"
             borderRadius={50}
-            marginBottom="5%"
-            style={{ scrollSnapAlign: 'center' }}
+            margin="0"
+            padding="0"
+            marginTop="2%"
         >
-            <Grid
-                gridTemplateColumns="repeat(3, 1fr)"
-                gridTemplateRows="0.25fr .25fr 1fr 1.25fr"
-                height="90%"
-                width="90%"
-                marginRight="0"
-                margin="3%"
-                padding="3%"
-                className="child"
-            >
-                <GridItem colSpan={2}>
-                    <Stack>
-                        <HStack as={Link} to={`/feed/${currentUser?.uid}`}>
-                            <Icon>
-                                <UserIcon />
-                            </Icon>
-
-                            <Text>{username}</Text>
-                        </HStack>
-                        <Text>{generateNiceDate(post.posted)}</Text>
-                    </Stack>
-                </GridItem>
-                <GridItem />
-                <GridItem colSpan={3}>
-                    <Heading>{post.title}</Heading>
-                </GridItem>
-                <GridItem colSpan={2} rowSpan={2}>
-                    <video
-                        src={post.video}
-                        controls
-                        style={{
-                            height: '100%',
-                            marginTop: '0',
-                        }}
-                    />
-                </GridItem>
-                <GridItem
-                    rowSpan={2}
-                    justifyContent="center"
-                    textOverflow="ellipsis"
+            <HStack height="90%" width="100%" marginRight="0">
+                <Center
+                    flex="1"
+                    py="auto"
+                    color="primary.500"
+                    fontWeight="bold"
                 >
-                    <Text marginLeft="25%" fontSize="xl">
-                        {post.description}
-                    </Text>
-                </GridItem>
-            </Grid>
+                    <Text fontSize="3xl">{post.supports}</Text>
+                    <Icon as={AiOutlineHeart}></Icon>
+                </Center>
+
+                <Grid
+                    gridTemplateColumns="repeat(3, 1fr)"
+                    gridTemplateRows="0.25fr .25fr 1fr 1.25fr"
+                    height="90%"
+                    width="95%"
+                    marginRight="0"
+                    margin="3%"
+                    padding="3%"
+                    flex="10"
+                >
+                    <GridItem colSpan={2}>
+                        <Stack>
+                            <HStack as={Link} to={`/feed/${username}`}>
+                                <Icon>
+                                    <UserIcon />
+                                </Icon>
+
+                                <Text>{username}</Text>
+                            </HStack>
+                            <Text>{generateNiceDate(post.posted)}</Text>
+                        </Stack>
+                    </GridItem>
+                    <GridItem />
+                    <GridItem colSpan={3}>
+                        <Heading>{post.title}</Heading>
+                    </GridItem>
+                    <GridItem colSpan={2} rowSpan={2}>
+                        <AspectRatio height="100%">
+                            <iframe
+                                src={post.video}
+                                title={post.title}
+                                allowFullScreen
+                            />
+                        </AspectRatio>
+                    </GridItem>
+                    <GridItem
+                        rowSpan={2}
+                        justifyContent="center"
+                        textOverflow="ellipsis"
+                        height="100%"
+                    >
+                        <Text
+                            marginLeft="25%"
+                            fontSize="xl"
+                            textOverflow="ellipsis"
+                            height="100%"
+                            overflow="auto"
+                        >
+                            {post.description}
+                        </Text>
+                    </GridItem>
+                </Grid>
+            </HStack>
         </Box>
     );
 };

@@ -1,10 +1,13 @@
 import {
+    AspectRatio,
     Button,
     Container,
     FormControl,
     FormLabel,
     Heading,
     Input,
+    ModalBody,
+    ModalHeader,
     Radio,
     RadioGroup,
     Tab,
@@ -88,103 +91,113 @@ const CreatePost: FC<CreatePostProps> = () => {
     };
 
     return (
-        <Container>
-            <Heading textAlign="center" marginBottom="5">
+        <>
+            <ModalHeader textAlign="center" marginBottom="5">
                 Create a Post
-            </Heading>
-            <form onSubmit={handleSubmit}>
-                <FormControl>
-                    <FormLabel>Title</FormLabel>
-                    <Input
-                        required
-                        name="title"
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                </FormControl>
-                <FormControl>
-                    <FormLabel>Description</FormLabel>
-                    <Input
-                        name="desc"
-                        onChange={(e) => setDesc(e.target.value)}
-                    />
-                </FormControl>
-                <FormControl>
-                    <FormLabel>Choose a Video</FormLabel>
-                    <Tabs isFitted>
-                        <TabList>
-                            <Tab onClick={() => setVideoType('upload')}>
-                                Upload a video
-                            </Tab>
-                            <Tab onClick={() => setVideoType('existing')}>
-                                Choose an existing video
-                            </Tab>
-                        </TabList>
-                        <TabPanels>
-                            <TabPanel>
-                                <input
-                                    type="file"
-                                    accept="video/mp4,video/x-m4v,video/*"
-                                    name="Upload Video"
-                                    onChange={(e) => {
-                                        if (e.target.files) {
-                                            const file = e.target.files[0];
-                                            setFile(file);
-                                        }
-                                    }}
-                                />
-                            </TabPanel>
+            </ModalHeader>
+            <ModalBody>
+                <form onSubmit={handleSubmit}>
+                    <FormControl>
+                        <FormLabel>Title</FormLabel>
+                        <Input
+                            required
+                            name="title"
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Description</FormLabel>
+                        <Input
+                            name="desc"
+                            onChange={(e) => setDesc(e.target.value)}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>When Did This Even Occur?</FormLabel>
+                        <Input
+                            name="desc"
+                            onChange={(e) => setDesc(e.target.value)}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Choose a Video</FormLabel>
+                        <Tabs isFitted>
+                            <TabList>
+                                <Tab onClick={() => setVideoType('upload')}>
+                                    Upload a video
+                                </Tab>
+                                <Tab onClick={() => setVideoType('existing')}>
+                                    Choose an existing video
+                                </Tab>
+                            </TabList>
+                            <TabPanels>
+                                <TabPanel>
+                                    <input
+                                        type="file"
+                                        accept="video/mp4,video/x-m4v,video/*"
+                                        name="Upload Video"
+                                        onChange={(e) => {
+                                            if (e.target.files) {
+                                                const file = e.target.files[0];
+                                                setFile(file);
+                                            }
+                                        }}
+                                    />
+                                </TabPanel>
 
-                            <TabPanel>
-                                <RadioGroup
-                                    onChange={(e) => setSelectedVideo(e)}
-                                    value={selectedVideo}
-                                >
-                                    <Radio value="">None</Radio>
-                                    {userVideos?.map((video) => (
-                                        <Radio
-                                            value={video}
-                                            key={video}
-                                            defaultValue={userVideos[0]}
-                                            alignItems="center"
-                                            justifyContent="center"
-                                            width="100%"
-                                            onSelect={() => {
-                                                if (video === selectedVideo)
-                                                    setSelectedVideo('');
-                                                else setSelectedVideo(video);
-                                            }}
-                                        >
-                                            <video
-                                                src={video}
-                                                controls
-                                                style={{
-                                                    height: '300px',
-                                                    border: 'solid',
-                                                    borderColor: '#2a9d8f',
-                                                    borderWidth:
-                                                        video === selectedVideo
-                                                            ? '5px'
-                                                            : '0px',
+                                <TabPanel>
+                                    <RadioGroup
+                                        onChange={(e) => setSelectedVideo(e)}
+                                        value={selectedVideo}
+                                    >
+                                        <Radio value="">None</Radio>
+                                        {userVideos?.map((video) => (
+                                            <Radio
+                                                value={video}
+                                                key={video}
+                                                defaultValue={userVideos[0]}
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                width="100%"
+                                                onSelect={() => {
+                                                    if (video === selectedVideo)
+                                                        setSelectedVideo('');
+                                                    else
+                                                        setSelectedVideo(video);
                                                 }}
-                                            />
-                                        </Radio>
-                                    ))}
-                                </RadioGroup>
-                            </TabPanel>
-                        </TabPanels>
-                    </Tabs>
-                </FormControl>
-                <Button
-                    type="submit"
-                    width="100%"
-                    marginTop="2"
-                    colorScheme="primary"
-                    isLoading={loading}
-                >
-                    Create Post!
-                </Button>
-            </form>
-        </Container>
+                                            >
+                                                <AspectRatio
+                                                    _checked={{
+                                                        height: '300px',
+                                                        border: 'solid',
+                                                        borderColor: '#2a9d8f',
+                                                        borderWidth: '5px',
+                                                    }}
+                                                >
+                                                    <iframe
+                                                        src={video}
+                                                        allowFullScreen
+                                                    />
+                                                </AspectRatio>
+                                            </Radio>
+                                        ))}
+                                    </RadioGroup>
+                                </TabPanel>
+                            </TabPanels>
+                        </Tabs>
+                    </FormControl>
+                    <Button
+                        type="submit"
+                        width="100%"
+                        marginTop="2"
+                        colorScheme="primary"
+                        isLoading={loading}
+                    >
+                        Create Post!
+                    </Button>
+                </form>
+            </ModalBody>
+        </>
     );
 };
 

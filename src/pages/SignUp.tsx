@@ -43,6 +43,7 @@ const Signup: FC<SignupProps> = () => {
                     .set({
                         screenName,
                         id: user.user ? user.user.uid : '',
+                        supportedPosts: [],
                     });
                 history.push('/');
             })
@@ -59,11 +60,7 @@ const Signup: FC<SignupProps> = () => {
     };
 
     return (
-        <VStack
-            align={'center'}
-            justify={'center'}
-            bg={useColorModeValue('gray.50', 'gray.800')}
-        >
+        <VStack align={'center'} justify={'center'}>
             {error && (
                 <Stack align={'center'}>
                     <Alert status="error" width={'md'} alignItems="center">
@@ -83,13 +80,7 @@ const Signup: FC<SignupProps> = () => {
                 <Heading fontSize={'4xl'}>Create your account</Heading>
             </Stack>
             <Stack align={'center'}>
-                <Box
-                    rounded={'lg'}
-                    bg={useColorModeValue('white', 'gray.700')}
-                    boxShadow={'lg'}
-                    p={8}
-                    minWidth="xs"
-                >
+                <Box rounded={'lg'} boxShadow={'lg'} p={8} minWidth="xs">
                     <Stack spacing={4}>
                         <FormControl id="screen-name">
                             <FormLabel>Screen Name</FormLabel>
@@ -134,7 +125,7 @@ const Signup: FC<SignupProps> = () => {
                             <Text>
                                 Already have an account?{' '}
                                 <StyledLink
-                                    color="special.300"
+                                    color="other.300"
                                     as={Link}
                                     to="/login"
                                 >

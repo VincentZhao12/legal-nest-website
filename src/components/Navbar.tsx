@@ -20,6 +20,9 @@ import {
     MenuList,
     Spacer,
     Tooltip,
+    Modal,
+    ModalOverlay,
+    ModalContent,
 } from '@chakra-ui/react';
 import {
     HamburgerIcon,
@@ -33,155 +36,169 @@ import { useAuth } from '../contexts/AuthContext';
 import { ReactComponent as UserIcon } from '../images/user.svg';
 import { ReactComponent as ExitIcon } from '../images/exit.svg';
 import { ReactComponent as PostIcon } from '../images/post.svg';
+import CreatePost from '../pages/CreatePost';
 
 export default function WithSubnavigation() {
     const { isOpen, onToggle } = useDisclosure();
+    const modalDisclosure = useDisclosure();
+    const modalOpen = modalDisclosure.isOpen;
+    const { onOpen, onClose } = modalDisclosure;
     const { currentUser, logout } = useAuth();
     const history = useHistory();
 
     return (
-        <Box>
-            <Flex
-                bg={useColorModeValue('white', 'gray.800')}
-                color={useColorModeValue('gray.600', 'white')}
-                minH={'60px'}
-                py={{ base: 2 }}
-                px={{ base: 4 }}
-                borderBottom={0}
-                borderStyle={'solid'}
-                borderColor={useColorModeValue('gray.200', 'gray.900')}
-                align={'center'}
-            >
+        <>
+            <Box>
                 <Flex
-                    flex={{ base: 1, md: 'auto' }}
-                    ml={{ base: -2 }}
-                    display={{ base: 'flex', md: 'none' }}
+                    bg={useColorModeValue('white', 'gray.800')}
+                    color={useColorModeValue('gray.600', 'white')}
+                    minH={'60px'}
+                    py={{ base: 2 }}
+                    px={{ base: 4 }}
+                    borderBottom={0}
+                    borderStyle={'solid'}
+                    borderColor={useColorModeValue('gray.200', 'gray.900')}
+                    align={'center'}
                 >
-                    <IconButton
-                        onClick={onToggle}
-                        icon={
-                            isOpen ? (
-                                <CloseIcon w={3} h={3} />
-                            ) : (
-                                <HamburgerIcon w={5} h={5} />
-                            )
-                        }
-                        variant={'ghost'}
-                        aria-label={'Toggle Navigation'}
-                    />
-                </Flex>
-                <Flex
-                    flex={{ base: 1 }}
-                    justify={{ base: 'center', md: 'start' }}
-                >
-                    <Text
-                        textAlign={useBreakpointValue({
-                            base: 'center',
-                            md: 'left',
-                        })}
-                        fontFamily={'heading'}
-                        color={useColorModeValue('gray.800', 'white')}
-                        as={Link}
-                        to="/"
+                    <Flex
+                        flex={{ base: 1, md: 'auto' }}
+                        ml={{ base: -2 }}
+                        display={{ base: 'flex', md: 'none' }}
                     >
-                        Legal Nest
-                    </Text>
-
-                    <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-                        <DesktopNav />
+                        <IconButton
+                            onClick={onToggle}
+                            icon={
+                                isOpen ? (
+                                    <CloseIcon w={3} h={3} />
+                                ) : (
+                                    <HamburgerIcon w={5} h={5} />
+                                )
+                            }
+                            variant={'ghost'}
+                            aria-label={'Toggle Navigation'}
+                        />
                     </Flex>
+                    <Flex
+                        flex={{ base: 1 }}
+                        justify={{ base: 'center', md: 'start' }}
+                    >
+                        <Text
+                            textAlign={useBreakpointValue({
+                                base: 'center',
+                                md: 'left',
+                            })}
+                            fontFamily={'heading'}
+                            color={useColorModeValue('gray.800', 'white')}
+                            as={Link}
+                            to="/"
+                        >
+                            Legal Nest
+                        </Text>
+
+                        <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
+                            <DesktopNav />
+                        </Flex>
+                    </Flex>
+
+                    <Stack
+                        flex={{ base: 1, md: 0 }}
+                        justify={'flex-end'}
+                        direction={'row'}
+                        spacing={6}
+                    >
+                        {currentUser ? (
+                            <>
+                                <Tooltip label="Create Post">
+                                    <IconButton
+                                        aria-label="Create Post"
+                                        background="inherit"
+                                        icon={<AddIcon color="secondary.400" />}
+                                        onClick={onOpen}
+                                    />
+                                </Tooltip>
+                                <Menu>
+                                    <MenuButton
+                                        as={IconButton}
+                                        aria-label="user"
+                                        icon={
+                                            <UserIcon
+                                                style={{
+                                                    backgroundColor: 'white',
+                                                }}
+                                            />
+                                        }
+                                    />
+                                    <MenuList>
+                                        <MenuItem onClick={logout}>
+                                            <Flex
+                                                width="inherit"
+                                                justifyContent="center"
+                                            >
+                                                <Text>Log Out</Text>
+                                                <Spacer />
+                                                <ExitIcon />
+                                            </Flex>
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={() =>
+                                                history.push(
+                                                    `/feed/${currentUser.uid}`,
+                                                )
+                                            }
+                                        >
+                                            <Flex
+                                                width="inherit"
+                                                justifyContent="center"
+                                            >
+                                                <Text>My Posts</Text>
+                                                <Spacer />
+                                                <PostIcon />
+                                            </Flex>
+                                        </MenuItem>
+                                    </MenuList>
+                                </Menu>
+                            </>
+                        ) : (
+                            <>
+                                <Button
+                                    as={Link}
+                                    fontSize={'sm'}
+                                    fontWeight={400}
+                                    variant={'link'}
+                                    to="/signin"
+                                >
+                                    Sign In
+                                </Button>
+
+                                <Button
+                                    as={Link}
+                                    display={{
+                                        base: 'none',
+                                        md: 'inline-flex',
+                                    }}
+                                    fontSize={'sm'}
+                                    fontWeight={600}
+                                    colorScheme={'primary'}
+                                    to="/signup"
+                                >
+                                    Sign Up
+                                </Button>
+                            </>
+                        )}
+                    </Stack>
                 </Flex>
 
-                <Stack
-                    flex={{ base: 1, md: 0 }}
-                    justify={'flex-end'}
-                    direction={'row'}
-                    spacing={6}
-                >
-                    {currentUser ? (
-                        <>
-                            <Tooltip label="Create Post">
-                                <IconButton
-                                    aria-label="Create Post"
-                                    background="inherit"
-                                    icon={<AddIcon color="secondary.400" />}
-                                    as={Link}
-                                    to="/create-post"
-                                />
-                            </Tooltip>
-                            <Menu>
-                                <MenuButton
-                                    as={IconButton}
-                                    aria-label="user"
-                                    icon={
-                                        <UserIcon
-                                            style={{
-                                                backgroundColor: 'white',
-                                            }}
-                                        />
-                                    }
-                                />
-                                <MenuList>
-                                    <MenuItem onClick={logout}>
-                                        <Flex
-                                            width="inherit"
-                                            justifyContent="center"
-                                        >
-                                            <Text>Log Out</Text>
-                                            <Spacer />
-                                            <ExitIcon />
-                                        </Flex>
-                                    </MenuItem>
-                                    <MenuItem
-                                        onClick={() =>
-                                            history.push(
-                                                `/feed/${currentUser.uid}`,
-                                            )
-                                        }
-                                    >
-                                        <Flex
-                                            width="inherit"
-                                            justifyContent="center"
-                                        >
-                                            <Text>My Posts</Text>
-                                            <Spacer />
-                                            <PostIcon />
-                                        </Flex>
-                                    </MenuItem>
-                                </MenuList>
-                            </Menu>
-                        </>
-                    ) : (
-                        <>
-                            <Button
-                                as={Link}
-                                fontSize={'sm'}
-                                fontWeight={400}
-                                variant={'link'}
-                                to="/signin"
-                            >
-                                Sign In
-                            </Button>
-
-                            <Button
-                                as={Link}
-                                display={{ base: 'none', md: 'inline-flex' }}
-                                fontSize={'sm'}
-                                fontWeight={600}
-                                colorScheme={'primary'}
-                                to="/signup"
-                            >
-                                Sign Up
-                            </Button>
-                        </>
-                    )}
-                </Stack>
-            </Flex>
-
-            <Collapse in={isOpen} animateOpacity>
-                <MobileNav />
-            </Collapse>
-        </Box>
+                <Collapse in={isOpen} animateOpacity>
+                    <MobileNav />
+                </Collapse>
+            </Box>
+            <Modal isOpen={modalOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <CreatePost />
+                </ModalContent>
+            </Modal>
+        </>
     );
 }
 
