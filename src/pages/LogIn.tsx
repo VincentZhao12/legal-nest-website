@@ -22,9 +22,9 @@ import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import firebase from '../firebase';
 
-export interface SignInProps {}
+export interface LogInProps {}
 
-const SignIn: FC<SignInProps> = () => {
+const LogIn: FC<LogInProps> = () => {
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
     const { login } = useAuth();
@@ -70,7 +70,7 @@ const SignIn: FC<SignInProps> = () => {
             )}
             <Container centerContent>
                 <Heading fontSize={'4xl'} textAlign="center">
-                    Sign in to your account
+                    Log in to your account
                 </Heading>
             </Container>
             <Stack align={'center'}>
@@ -98,7 +98,7 @@ const SignIn: FC<SignInProps> = () => {
                                 onClick={handleSubmit}
                                 isLoading={loading}
                             >
-                                Sign in
+                                Log in
                             </Button>
                         </Stack>
                         <Stack spacing={10} alignItems="center">
@@ -120,4 +120,4 @@ const SignIn: FC<SignInProps> = () => {
     );
 };
 
-export default SignIn;
+export default LogIn;

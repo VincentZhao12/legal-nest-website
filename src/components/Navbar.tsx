@@ -129,16 +129,6 @@ export default function WithSubnavigation() {
                                         }
                                     />
                                     <MenuList>
-                                        <MenuItem onClick={logout}>
-                                            <Flex
-                                                width="inherit"
-                                                justifyContent="center"
-                                            >
-                                                <Text>Log Out</Text>
-                                                <Spacer />
-                                                <ExitIcon />
-                                            </Flex>
-                                        </MenuItem>
                                         <MenuItem
                                             onClick={() =>
                                                 history.push(
@@ -155,6 +145,16 @@ export default function WithSubnavigation() {
                                                 <PostIcon />
                                             </Flex>
                                         </MenuItem>
+                                        <MenuItem onClick={logout}>
+                                            <Flex
+                                                width="inherit"
+                                                justifyContent="center"
+                                            >
+                                                <Text>Log Out</Text>
+                                                <Spacer />
+                                                <ExitIcon />
+                                            </Flex>
+                                        </MenuItem>
                                     </MenuList>
                                 </Menu>
                             </>
@@ -165,9 +165,9 @@ export default function WithSubnavigation() {
                                     fontSize={'sm'}
                                     fontWeight={400}
                                     variant={'link'}
-                                    to="/signin"
+                                    to="/login"
                                 >
-                                    Sign In
+                                    Log In
                                 </Button>
 
                                 <Button

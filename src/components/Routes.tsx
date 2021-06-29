@@ -4,7 +4,7 @@ import CreatePost from '../pages/CreatePost';
 import Feed from '../pages/Feed';
 import Homepage from '../pages/Homepage';
 import LearnRights from '../pages/LearnRights';
-import SignIn from '../pages/SignIn';
+import LogIn from '../pages/LogIn';
 import Signup from '../pages/SignUp';
 
 interface RoutesProps {}
@@ -13,7 +13,7 @@ const Routes: FC<RoutesProps> = () => {
     return (
         <>
             <Route exact path="/" component={Homepage} />
-            <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/rights" component={LearnRights} />
             {/* <Route exact path="/create-post" component={CreatePost} /> */}

@@ -106,21 +106,21 @@ const CreatePost: FC<CreatePostProps> = () => {
                         />
                     </FormControl>
                     <FormControl>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel pt="5">Description</FormLabel>
                         <Input
                             name="desc"
                             onChange={(e) => setDesc(e.target.value)}
                         />
                     </FormControl>
                     <FormControl>
-                        <FormLabel>When Did This Even Occur?</FormLabel>
+                        <FormLabel pt="5">When Did This Even Occur?</FormLabel>
                         <Input
                             name="desc"
                             onChange={(e) => setDesc(e.target.value)}
                         />
                     </FormControl>
                     <FormControl>
-                        <FormLabel>Choose a Video</FormLabel>
+                        <FormLabel pt="5">Choose a Video</FormLabel>
                         <Tabs isFitted>
                             <TabList>
                                 <Tab onClick={() => setVideoType('upload')}>
