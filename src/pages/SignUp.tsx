@@ -127,9 +127,9 @@ const Signup: FC<SignupProps> = () => {
                                 <StyledLink
                                     color="other.300"
                                     as={Link}
-                                    to="/login"
+                                    to="/signin"
                                 >
-                                    Log In
+                                    Log in
                                 </StyledLink>
                             </Text>
                         </Stack>

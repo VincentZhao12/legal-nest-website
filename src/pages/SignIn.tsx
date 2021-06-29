@@ -109,7 +109,7 @@ const SignIn: FC<SignInProps> = () => {
                                     as={Link}
                                     to="/signup"
                                 >
-                                    Sign Up
+                                    Sign up
                                 </StyledLink>
                             </Text>
                         </Stack>
