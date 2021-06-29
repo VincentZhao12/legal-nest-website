@@ -9,7 +9,7 @@ import {
     Stack,
     Text,
     Center,
-    Button,
+    useMediaQuery,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { PostType } from '../../pages/Feed';
@@ -25,6 +25,7 @@ interface PostProps {
 }
 
 const Post: FC<PostProps> = ({ post }) => {
+    const [isLargerThan62em] = useMediaQuery("(min-width:62em)");
     const [username, setUsername] = useState<string>('');
     const [supported, setSupported] = useState<boolean>(false);
     const [postsSupported, setPostsSupported] = useState();
@@ -70,7 +71,7 @@ const Post: FC<PostProps> = ({ post }) => {
             borderColor="other.400"
             borderRadius={50}
             margin="0"
-            padding="0"
+            padding="16px"
             marginTop="2%"
         >
             <HStack height="90%" width="100%" marginRight="0">
@@ -80,13 +81,13 @@ const Post: FC<PostProps> = ({ post }) => {
                     color="primary.500"
                     fontWeight="bold"
                 >
-                    <Text fontSize="3xl">{post.supports}</Text>
+                    <Text mr="8px" fontSize="3xl">{post.supports}</Text>
                     <Icon as={AiOutlineHeart}></Icon>
                 </Center>
 
                 <Grid
                     gridTemplateColumns="repeat(3, 1fr)"
-                    gridTemplateRows="0.25fr .25fr 1fr 1.25fr"
+                    gridTemplateRows="0.25fr 0.25fr 1fr 1.25fr"
                     height="90%"
                     width="95%"
                     marginRight="0"
@@ -108,10 +109,10 @@ const Post: FC<PostProps> = ({ post }) => {
                     </GridItem>
                     <GridItem />
                     <GridItem colSpan={3}>
-                        <Heading>{post.title}</Heading>
+                        <Heading pb="16px">{post.title}</Heading>
                     </GridItem>
-                    <GridItem colSpan={2} rowSpan={2}>
-                        <AspectRatio height="100%">
+                    <GridItem colSpan={isLargerThan62em ? 2 : 3} rowSpan={2}>
+                        <AspectRatio maxWidth="100%" maxHeight="100%">
                             <iframe
                                 src={post.video}
                                 title={post.title}
@@ -120,13 +121,15 @@ const Post: FC<PostProps> = ({ post }) => {
                         </AspectRatio>
                     </GridItem>
                     <GridItem
+                        colSpan={isLargerThan62em ? 1 : 3}
                         rowSpan={2}
                         justifyContent="center"
                         textOverflow="ellipsis"
                         height="100%"
                     >
                         <Text
-                            marginLeft="25%"
+                            pt={isLargerThan62em ? "0px" : "16px"}
+                            ml={isLargerThan62em ? "25%" : "0"}
                             fontSize="xl"
                             textOverflow="ellipsis"
                             height="100%"
