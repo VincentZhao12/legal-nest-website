@@ -103,14 +103,17 @@ const Post: FC<PostProps> = ({ post }) => {
                 >
                     <GridItem colSpan={2}>
                         <Stack>
-                            <HStack as={Link} to={`/feed/${username}`}>
+                            <HStack as={Link} to={`/feed/${post.creator}`}>
                                 <Icon>
                                     <UserIcon />
                                 </Icon>
 
                                 <Text>{username}</Text>
                             </HStack>
-                            <Text>{generateNiceDate(post.posted)}</Text>
+                            <Text>
+                                <b>{generateNiceDate(post.eventDate)}</b> posted{' '}
+                                <b>{generateNiceDate(post.posted)}</b>
+                            </Text>
                         </Stack>
                     </GridItem>
                     <GridItem />

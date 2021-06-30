@@ -17,6 +17,7 @@ import {
 import React, { FC, FormEvent, useState } from 'react';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { DatePicker } from '../components/date-picker';
 import { useAuth } from '../contexts/AuthContext';
 import { db, storage } from '../firebase';
 
@@ -33,6 +34,7 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
     const [userVideos, setUserVideos] = useState<string[]>();
     const [selectedVideo, setSelectedVideo] = useState<string>('');
     const [videoType, setVideoType] = useState<'upload' | 'existing'>('upload');
+    const [eventDate, setEventDate] = useState<Date>();
 
     const history = useHistory();
 
@@ -84,6 +86,7 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
                 description: desc,
                 supports: 0,
                 supporters: [],
+                eventDate,
             });
         } catch (e) {
             console.log(e);
@@ -120,6 +123,14 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
                     <FormControl>
                         <FormLabel pt="5">When Did This Even Occur?</FormLabel>
                         {/* Date Input Here */}
+                        <DatePicker
+                            onChange={(date) => {
+                                if (!Array.isArray(date))
+                                    setEventDate(date || new Date(Date.now()));
+                            }}
+                            maxDate={new Date(Date.now())}
+                            selected={eventDate}
+                        />
                     </FormControl>
                     <FormControl>
                         <FormLabel pt="5">Choose a Video</FormLabel>

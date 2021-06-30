@@ -19,6 +19,7 @@ export interface PostType {
     video: string;
     id: string;
     supporters: string[];
+    eventDate: firebase.firestore.Timestamp;
 }
 
 const Feed: FC<FeedProps> = ({ match }) => {
@@ -36,6 +37,7 @@ const Feed: FC<FeedProps> = ({ match }) => {
                 video: doc.data().video,
                 id: doc.id,
                 supporters: doc.data().supporters,
+                eventDate: doc.data().eventDate,
             }));
 
             posts.sort((post1, post2) => post2.supports - post1.supports);
