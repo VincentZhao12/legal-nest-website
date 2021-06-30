@@ -195,7 +195,7 @@ export default function WithSubnavigation() {
             <Modal isOpen={modalOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <CreatePost />
+                    <CreatePost onClose={onClose} />
                 </ModalContent>
             </Modal>
         </>

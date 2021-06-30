@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { Route } from 'react-router-dom';
-import CreatePost from '../pages/CreatePost';
 import Feed from '../pages/Feed';
 import Homepage from '../pages/Homepage';
 import LearnRights from '../pages/LearnRights';

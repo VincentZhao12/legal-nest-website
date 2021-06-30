@@ -1,5 +1,4 @@
 import {
-    useColorModeValue,
     Stack,
     Heading,
     Box,
@@ -43,7 +42,6 @@ const Signup: FC<SignupProps> = () => {
                     .set({
                         screenName,
                         id: user.user ? user.user.uid : '',
-                        supportedPosts: [],
                     });
                 history.push('/');
             })

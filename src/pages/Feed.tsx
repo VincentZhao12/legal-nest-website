@@ -1,7 +1,6 @@
 import { Container } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { useEffect } from 'react';
-import { HashRouter, Link, Route } from 'react-router-dom';
 import Post from '../components/feed-components/Post';
 import { FeedParams, Match } from '../components/Routes';
 import firebase, { db } from '../firebase';
@@ -19,6 +18,7 @@ export interface PostType {
     title: string;
     video: string;
     id: string;
+    supporters: string[];
 }
 
 const Feed: FC<FeedProps> = ({ match }) => {
@@ -26,16 +26,8 @@ const Feed: FC<FeedProps> = ({ match }) => {
     const user = match.params.uid;
 
     useEffect(() => {
-        const getPosts = async () => {
-            let postDocs: firebase.firestore.QuerySnapshot;
-            if (user)
-                postDocs = await db
-                    .collection('posts')
-                    .where('creator', '==', user)
-                    .get();
-            else postDocs = await db.collection('posts').get();
-
-            const posts: PostType[] = postDocs.docs.map((doc) => ({
+        const docListener = (snapshot: firebase.firestore.QuerySnapshot) => {
+            const posts: PostType[] = snapshot.docs.map((doc) => ({
                 creator: doc.data().creator,
                 description: doc.data().description,
                 posted: doc.data().posted,
@@ -43,11 +35,21 @@ const Feed: FC<FeedProps> = ({ match }) => {
                 title: doc.data().title,
                 video: doc.data().video,
                 id: doc.id,
+                supporters: doc.data().supporters,
             }));
+
+            posts.sort((post1, post2) => post2.supports - post1.supports);
 
             setPosts(posts);
         };
-        getPosts();
+        let postDocs:
+            | firebase.firestore.CollectionReference
+            | firebase.firestore.Query;
+        if (user)
+            postDocs = db.collection('posts').where('creator', '==', user);
+        else postDocs = db.collection('posts');
+
+        postDocs.onSnapshot(docListener);
     }, [user]);
     return (
         <Container

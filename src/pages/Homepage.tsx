@@ -1,16 +1,13 @@
 import React, { FC } from 'react';
 import {
     Flex,
-    Box,
     Center,
     Spacer,
     VStack,
     HStack,
     Text,
     Button,
-    Container,
 } from '@chakra-ui/react';
-import { Image } from '@chakra-ui/react';
 import { ReactComponent as Landing } from '../images/landing.svg';
 import { useHistory } from 'react-router-dom';
 

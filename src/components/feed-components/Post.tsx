@@ -19,17 +19,15 @@ import { useEffect } from 'react';
 import firebase, { db } from '../../firebase';
 import { Link } from 'react-router-dom';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
-import { prependOnceListener } from 'process';
 
 interface PostProps {
     post: PostType;
 }
 
 const Post: FC<PostProps> = ({ post }) => {
-    const [isLargerThan62em] = useMediaQuery("(min-width:62em)");
+    const [isLargerThan62em] = useMediaQuery('(min-width:62em)');
     const [username, setUsername] = useState<string>('');
     const [supported, setSupported] = useState<boolean>(false);
-    const [postsSupported, setPostsSupported] = useState();
     const { currentUser } = useAuth();
 
     useEffect(() => {
@@ -40,33 +38,33 @@ const Post: FC<PostProps> = ({ post }) => {
                 .get();
             setUsername(userDoc.data()?.screenName);
         };
-        const checkSupported = async () => {
-            const userDoc = await db
-                .collection('users')
-                .doc(currentUser?.uid)
-                .get();
-            // setSupported(
-            //     userDoc.data()?.postsSupported.includes(currentUser?.uid),
-            // );
-            setPostsSupported(userDoc.data()?.postsSupported);
-        };
+        if (post.supporters?.includes(currentUser?.uid || ''))
+            setSupported(true);
         getUsername();
-        checkSupported();
-    }, [post]);
+    }, [post, currentUser]);
 
     const handleClick = () => {
         setSupported(!supported);
-        
-        if(supported) // was supported before
-            post.supports -= 1;
-        else
-            post.supports += 1;
-        
-        db.collection('posts')
-            .doc(post.id)
-            .update({
-                supports: post.supports,
-            });
+        let supporters = post.supporters || [];
+        let supports = post.supports;
+
+        if (supported) {
+            supports--;
+
+            const index = supporters.indexOf(currentUser?.uid || '');
+            if (index > -1) {
+                supporters.splice(index, 1);
+            }
+        } else {
+            supports++;
+
+            if (currentUser) supporters.push(currentUser.uid);
+        }
+
+        db.collection('posts').doc(post.id).update({
+            supports,
+            supporters,
+        });
     };
 
     return (
@@ -80,26 +78,28 @@ const Post: FC<PostProps> = ({ post }) => {
             padding="16px"
             marginTop="2%"
         >
-            <HStack height="90%" width="100%" marginRight="0">
+            <HStack height="100%" width="100%" marginRight="0">
                 <Center
                     flex="1"
                     py="auto"
                     color="primary.500"
                     fontWeight="bold"
                 >
-                    <Text mr="8px" fontSize="3xl">{post.supports}</Text>
-                    <Icon onClick={handleClick} fill="#f13e2d" as={supported ? AiFillHeart : AiOutlineHeart}></Icon>
+                    <Text mr="8px" fontSize="3xl">
+                        {post.supports}
+                    </Text>
+                    <Icon
+                        onClick={handleClick}
+                        fill="#f13e2d"
+                        as={supported ? AiFillHeart : AiOutlineHeart}
+                    ></Icon>
                 </Center>
 
                 <Grid
                     gridTemplateColumns="repeat(3, 1fr)"
                     gridTemplateRows="0.25fr 0.25fr 1fr 1.25fr"
-                    height="90%"
-                    width="95%"
-                    marginRight="0"
-                    margin="3%"
-                    padding="3%"
-                    flex="10"
+                    height="100%"
+                    width="90%"
                 >
                     <GridItem colSpan={2}>
                         <Stack>
@@ -118,13 +118,17 @@ const Post: FC<PostProps> = ({ post }) => {
                         <Heading pb="16px">{post.title}</Heading>
                     </GridItem>
                     <GridItem colSpan={isLargerThan62em ? 2 : 3} rowSpan={2}>
-                        <AspectRatio maxWidth="100%" maxHeight="100%">
-                            <iframe
-                                src={post.video}
-                                title={post.title}
-                                allowFullScreen
-                            />
-                        </AspectRatio>
+                        <video
+                            src={post.video}
+                            title={post.title}
+                            controls
+                            autoPlay={false}
+                            style={{
+                                height: '100%',
+                                backgroundColor: 'black',
+                                width: '100%',
+                            }}
+                        />
                     </GridItem>
                     <GridItem
                         colSpan={isLargerThan62em ? 1 : 3}
@@ -134,8 +138,8 @@ const Post: FC<PostProps> = ({ post }) => {
                         height="100%"
                     >
                         <Text
-                            pt={isLargerThan62em ? "0px" : "16px"}
-                            ml={isLargerThan62em ? "25%" : "0"}
+                            pt={isLargerThan62em ? '0px' : '16px'}
+                            ml={isLargerThan62em ? '25%' : '0'}
                             fontSize="xl"
                             textOverflow="ellipsis"
                             height="100%"

@@ -1,10 +1,8 @@
 import {
     AspectRatio,
     Button,
-    Container,
     FormControl,
     FormLabel,
-    Heading,
     Input,
     ModalBody,
     ModalHeader,
@@ -21,9 +19,12 @@ import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { db, storage } from '../firebase';
-interface CreatePostProps {}
 
-const CreatePost: FC<CreatePostProps> = () => {
+interface CreatePostProps {
+    onClose: () => any;
+}
+
+const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
     const [file, setFile] = useState<any>();
     const [title, setTitle] = useState<string>();
     const [desc, setDesc] = useState<string>();
@@ -53,7 +54,7 @@ const CreatePost: FC<CreatePostProps> = () => {
         };
 
         getUserVideos();
-    }, []);
+    }, [currentUser]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -82,10 +83,14 @@ const CreatePost: FC<CreatePostProps> = () => {
                 title,
                 description: desc,
                 supports: 0,
+                supporters: [],
             });
         } catch (e) {
             console.log(e);
         }
+
+        setLoading(false);
+        onClose();
 
         history.push(`/feed/${currentUser?.uid}`);
     };
@@ -114,10 +119,7 @@ const CreatePost: FC<CreatePostProps> = () => {
                     </FormControl>
                     <FormControl>
                         <FormLabel pt="5">When Did This Even Occur?</FormLabel>
-                        <Input
-                            name="desc"
-                            onChange={(e) => setDesc(e.target.value)}
-                        />
+                        {/* Date Input Here */}
                     </FormControl>
                     <FormControl>
                         <FormLabel pt="5">Choose a Video</FormLabel>
@@ -134,7 +136,7 @@ const CreatePost: FC<CreatePostProps> = () => {
                                 <TabPanel>
                                     <input
                                         type="file"
-                                        accept="video/mp4,video/x-m4v,video/*"
+                                        accept="video/mp4"
                                         name="Upload Video"
                                         onChange={(e) => {
                                             if (e.target.files) {
@@ -166,19 +168,20 @@ const CreatePost: FC<CreatePostProps> = () => {
                                                         setSelectedVideo(video);
                                                 }}
                                             >
-                                                <AspectRatio
-                                                    _checked={{
+                                                <video
+                                                    style={{
                                                         height: '300px',
                                                         border: 'solid',
                                                         borderColor: '#2a9d8f',
-                                                        borderWidth: '5px',
+                                                        borderWidth:
+                                                            video ===
+                                                            selectedVideo
+                                                                ? '5px'
+                                                                : '0px',
                                                     }}
-                                                >
-                                                    <iframe
-                                                        src={video}
-                                                        allowFullScreen
-                                                    />
-                                                </AspectRatio>
+                                                    src={video}
+                                                    controls
+                                                />
                                             </Radio>
                                         ))}
                                     </RadioGroup>
