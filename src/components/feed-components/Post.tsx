@@ -1,5 +1,4 @@
 import {
-    AspectRatio,
     Box,
     Grid,
     GridItem,
@@ -8,8 +7,12 @@ import {
     Icon,
     Stack,
     Text,
-    Center,
+    Button,
     useMediaQuery,
+    useDisclosure,
+    Modal,
+    ModalContent,
+    ModalOverlay,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { PostType } from '../../pages/Feed';
@@ -19,6 +22,7 @@ import { useEffect } from 'react';
 import firebase, { db } from '../../firebase';
 import { Link } from 'react-router-dom';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import CreatePost from '../../pages/CreatePost';
 
 interface PostProps {
     post: PostType;
@@ -26,10 +30,11 @@ interface PostProps {
 
 const Post: FC<PostProps> = ({ post }) => {
     const [isLargerThan62emW] = useMediaQuery('(min-width:62em)');
-    const [isLargerThan62emH] = useMediaQuery('(min-height:62em)');
     const [username, setUsername] = useState<string>('');
     const [supported, setSupported] = useState<boolean>(false);
+    const [initiallySupported, setInitallySupported] = useState<boolean>(false);
     const { currentUser } = useAuth();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
         const getUsername = async () => {
@@ -39,8 +44,11 @@ const Post: FC<PostProps> = ({ post }) => {
                 .get();
             setUsername(userDoc.data()?.screenName);
         };
-        if (post.supporters?.includes(currentUser?.uid || ''))
+        if (post.supporters?.includes(currentUser?.uid || '')) {
             setSupported(true);
+            setInitallySupported(true);
+        }
+
         getUsername();
     }, [post, currentUser]);
 
@@ -80,16 +88,23 @@ const Post: FC<PostProps> = ({ post }) => {
             marginTop="2%"
         >
             <HStack height="100%" width="100%" marginRight="0">
-                <Stack>
+                <Stack minW="50px" alignItems="center">
                     <Icon
                         onClick={handleClick}
                         fill="#f13e2d"
                         as={supported ? AiFillHeart : AiOutlineHeart}
-                        width="20px"
-                        height="20px"
+                        width="40px"
+                        height="40px"
                     />
-                    <Text mr="8px" fontSize="3xl" textAlign="center">
-                        {post.supports}
+                    <Text mr="8px" fontSize="3xl">
+                        {post.supports +
+                            (initiallySupported
+                                ? supported
+                                    ? 0
+                                    : -1
+                                : supported
+                                ? 1
+                                : 0)}
                     </Text>
                 </Stack>
 
@@ -100,7 +115,7 @@ const Post: FC<PostProps> = ({ post }) => {
                     width="90%"
                     marginBottom="10"
                 >
-                    <GridItem colSpan={3}>
+                    <GridItem colSpan={2}>
                         <Stack>
                             <HStack as={Link} to={`/feed/${post.creator}`}>
                                 <Icon>
@@ -110,11 +125,24 @@ const Post: FC<PostProps> = ({ post }) => {
                                 <Text>{username}</Text>
                             </HStack>
                             <Text>
-                                <b>{generateNiceDate(post.eventDate)}</b> posted{' '}
+                                Occurred{' '}
+                                <b>{generateNiceDate(post.eventDate)}</b>
+                                <br /> Posted{' '}
                                 <b>{generateNiceDate(post.posted)}</b>
                             </Text>
                             <Heading pb="16px">{post.title}</Heading>
                         </Stack>
+                    </GridItem>
+                    <GridItem>
+                        {currentUser?.uid === post.creator && (
+                            <Button
+                                colorScheme="primary"
+                                float="right"
+                                onClick={onOpen}
+                            >
+                                Edit Post
+                            </Button>
+                        )}
                     </GridItem>
                     <GridItem
                         colSpan={isLargerThan62emW ? 2 : 3}
@@ -152,6 +180,16 @@ const Post: FC<PostProps> = ({ post }) => {
                     </GridItem>
                 </Grid>
             </HStack>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <CreatePost
+                        onClose={onClose}
+                        postData={post}
+                        postId={post.id}
+                    />
+                </ModalContent>
+            </Modal>
         </Box>
     );
 };

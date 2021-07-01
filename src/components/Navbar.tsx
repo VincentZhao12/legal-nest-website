@@ -62,7 +62,6 @@ export default function WithSubnavigation() {
                 >
                     <Flex
                         flex={{ base: 1, md: 'auto' }}
-                        ml={{ base: -2 }}
                         display={{ base: 'flex', md: 'none' }}
                     >
                         <IconButton
@@ -100,7 +99,7 @@ export default function WithSubnavigation() {
                         </Flex>
                     </Flex>
 
-                    <Stack
+                    <Flex
                         flex={{ base: 1, md: 0 }}
                         justify={'flex-end'}
                         direction={'row'}
@@ -114,12 +113,12 @@ export default function WithSubnavigation() {
                                         background="inherit"
                                         icon={<AddIcon color="secondary.400" />}
                                         onClick={onOpen}
+                                        marginRight="2"
                                     />
                                 </Tooltip>
                                 <Menu>
                                     <MenuButton
                                         as={IconButton}
-                                        aria-label="user"
                                         icon={
                                             <UserIcon
                                                 style={{
@@ -166,6 +165,7 @@ export default function WithSubnavigation() {
                                     fontWeight={400}
                                     variant={'link'}
                                     to="/login"
+                                    marginRight="2"
                                 >
                                     Log In
                                 </Button>
@@ -185,7 +185,7 @@ export default function WithSubnavigation() {
                                 </Button>
                             </>
                         )}
-                    </Stack>
+                    </Flex>
                 </Flex>
 
                 <Collapse in={isOpen} animateOpacity>
@@ -347,11 +347,7 @@ const MobileNavItem = ({ label, children, to }: NavItem) => {
                 )}
             </Flex>
 
-            <Collapse
-                in={isOpen}
-                animateOpacity
-                style={{ marginTop: '0!important' }}
-            >
+            <Collapse in={isOpen} animateOpacity>
                 <Stack
                     mt={2}
                     pl={4}
@@ -415,10 +411,6 @@ const NAV_ITEMS: Array<NavItem> = [
     //         },
     //     ],
     // },
-    {
-        label: 'Legal Advice',
-        to: '/advice',
-    },
     {
         label: 'Learn Your Rights',
         to: '/rights',

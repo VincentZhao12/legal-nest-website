@@ -1,5 +1,4 @@
 import {
-    AspectRatio,
     Button,
     FormControl,
     FormLabel,
@@ -13,6 +12,7 @@ import {
     TabPanel,
     TabPanels,
     Tabs,
+    Textarea,
 } from '@chakra-ui/react';
 import React, { FC, FormEvent, useState } from 'react';
 import { useEffect } from 'react';
@@ -20,21 +20,30 @@ import { useHistory } from 'react-router-dom';
 import { DatePicker } from '../components/date-picker';
 import { useAuth } from '../contexts/AuthContext';
 import { db, storage } from '../firebase';
+import { PostType } from './Feed';
 
 interface CreatePostProps {
     onClose: () => any;
+    postData?: PostType;
+    postId?: string;
 }
 
-const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
-    const [file, setFile] = useState<any>();
-    const [title, setTitle] = useState<string>();
-    const [desc, setDesc] = useState<string>();
+const CreatePost: FC<CreatePostProps> = ({ onClose, postData, postId }) => {
+    const [file, setFile] = useState<any>(postData?.video || undefined);
+    const [title, setTitle] = useState<string>(postData?.title || '');
+    const [desc, setDesc] = useState<string>(postData?.description || '');
     const { currentUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [userVideos, setUserVideos] = useState<string[]>();
-    const [selectedVideo, setSelectedVideo] = useState<string>('');
-    const [videoType, setVideoType] = useState<'upload' | 'existing'>('upload');
-    const [eventDate, setEventDate] = useState<Date>();
+    const [selectedVideo, setSelectedVideo] = useState<string>(
+        postData?.video || '',
+    );
+    const [videoType, setVideoType] = useState<'upload' | 'existing'>(
+        postData?.video ? 'existing' : 'upload',
+    );
+    const [eventDate, setEventDate] = useState<Date>(
+        postData?.eventDate.toDate() || new Date(Date.now()),
+    );
 
     const history = useHistory();
 
@@ -56,14 +65,16 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
         };
 
         getUserVideos();
-    }, [currentUser]);
+    }, [currentUser, history]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         setLoading(true);
 
-        const newDoc = db.collection('posts').doc();
+        let newDoc = db.collection('posts').doc();
+
+        if (postId) newDoc = db.collection('posts').doc(postId);
 
         let url: string = '';
         try {
@@ -78,19 +89,32 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
                 url = selectedVideo;
             }
 
-            await newDoc.set({
-                posted: new Date(Date.now()),
-                creator: currentUser?.uid,
-                video: url,
-                title,
-                description: desc,
-                supports: 0,
-                supporters: [],
-                eventDate,
-            });
+            if (!postId) {
+                await newDoc.set({
+                    posted: new Date(Date.now()),
+                    creator: currentUser?.uid,
+                    video: url,
+                    title,
+                    description: desc,
+                    supports: 0,
+                    supporters: [],
+                    eventDate,
+                });
+            } else {
+                await newDoc.update({
+                    posted: new Date(Date.now()),
+                    creator: currentUser?.uid,
+                    video: url,
+                    title,
+                    description: desc,
+                    eventDate,
+                });
+            }
         } catch (e) {
             console.log(e);
         }
+
+        if (postData) setSelectedVideo(postData.video);
 
         setLoading(false);
         onClose();
@@ -101,7 +125,7 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
     return (
         <>
             <ModalHeader textAlign="center" marginBottom="5">
-                Create a Post
+                {postId ? 'Edit ' : 'Create '} a Post
             </ModalHeader>
             <ModalBody>
                 <form onSubmit={handleSubmit}>
@@ -109,13 +133,16 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
                         <FormLabel>Title</FormLabel>
                         <Input
                             required
+                            value={title}
                             name="title"
                             onChange={(e) => setTitle(e.target.value)}
                         />
                     </FormControl>
                     <FormControl>
                         <FormLabel pt="5">Description</FormLabel>
-                        <Input
+                        <Textarea
+                            required
+                            value={desc}
                             name="desc"
                             onChange={(e) => setDesc(e.target.value)}
                         />
@@ -134,7 +161,10 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
                     </FormControl>
                     <FormControl>
                         <FormLabel pt="5">Choose a Video</FormLabel>
-                        <Tabs isFitted>
+                        <Tabs
+                            isFitted
+                            defaultIndex={videoType === 'existing' ? 1 : 0}
+                        >
                             <TabList>
                                 <Tab onClick={() => setVideoType('upload')}>
                                     Upload a video
@@ -184,6 +214,8 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
                                                         height: '300px',
                                                         border: 'solid',
                                                         borderColor: '#2a9d8f',
+                                                        backgroundColor:
+                                                            'black',
                                                         borderWidth:
                                                             video ===
                                                             selectedVideo
@@ -208,7 +240,7 @@ const CreatePost: FC<CreatePostProps> = ({ onClose }) => {
                         colorScheme="primary"
                         isLoading={loading}
                     >
-                        Create Post!
+                        {postId ? 'Edit ' : 'Create '} Post!
                     </Button>
                 </form>
             </ModalBody>
