@@ -25,7 +25,8 @@ interface PostProps {
 }
 
 const Post: FC<PostProps> = ({ post }) => {
-    const [isLargerThan62em] = useMediaQuery('(min-width:62em)');
+    const [isLargerThan62emW] = useMediaQuery('(min-width:62em)');
+    const [isLargerThan62emH] = useMediaQuery('(min-height:62em)');
     const [username, setUsername] = useState<string>('');
     const [supported, setSupported] = useState<boolean>(false);
     const { currentUser } = useAuth();
@@ -79,29 +80,27 @@ const Post: FC<PostProps> = ({ post }) => {
             marginTop="2%"
         >
             <HStack height="100%" width="100%" marginRight="0">
-                <Center
-                    flex="1"
-                    py="auto"
-                    color="primary.500"
-                    fontWeight="bold"
-                >
-                    <Text mr="8px" fontSize="3xl">
-                        {post.supports}
-                    </Text>
+                <Stack>
                     <Icon
                         onClick={handleClick}
                         fill="#f13e2d"
                         as={supported ? AiFillHeart : AiOutlineHeart}
-                    ></Icon>
-                </Center>
+                        width="20px"
+                        height="20px"
+                    />
+                    <Text mr="8px" fontSize="3xl" textAlign="center">
+                        {post.supports}
+                    </Text>
+                </Stack>
 
                 <Grid
                     gridTemplateColumns="repeat(3, 1fr)"
-                    gridTemplateRows="0.25fr 0.25fr 1fr 1.25fr"
+                    gridTemplateRows="15% 37.5% 37.5%"
                     height="100%"
                     width="90%"
+                    marginBottom="10"
                 >
-                    <GridItem colSpan={2}>
+                    <GridItem colSpan={3}>
                         <Stack>
                             <HStack as={Link} to={`/feed/${post.creator}`}>
                                 <Icon>
@@ -114,13 +113,13 @@ const Post: FC<PostProps> = ({ post }) => {
                                 <b>{generateNiceDate(post.eventDate)}</b> posted{' '}
                                 <b>{generateNiceDate(post.posted)}</b>
                             </Text>
+                            <Heading pb="16px">{post.title}</Heading>
                         </Stack>
                     </GridItem>
-                    <GridItem />
-                    <GridItem colSpan={3}>
-                        <Heading pb="16px">{post.title}</Heading>
-                    </GridItem>
-                    <GridItem colSpan={isLargerThan62em ? 2 : 3} rowSpan={2}>
+                    <GridItem
+                        colSpan={isLargerThan62emW ? 2 : 3}
+                        rowSpan={isLargerThan62emW ? 2 : 1}
+                    >
                         <video
                             src={post.video}
                             title={post.title}
@@ -130,23 +129,23 @@ const Post: FC<PostProps> = ({ post }) => {
                                 height: '100%',
                                 backgroundColor: 'black',
                                 width: '100%',
+                                minHeight: '100px',
                             }}
                         />
                     </GridItem>
                     <GridItem
-                        colSpan={isLargerThan62em ? 1 : 3}
-                        rowSpan={2}
+                        colSpan={isLargerThan62emW ? 1 : 3}
+                        rowSpan={isLargerThan62emW ? 2 : 1}
                         justifyContent="center"
-                        textOverflow="ellipsis"
+                        overflow="auto"
                         height="100%"
                     >
                         <Text
-                            pt={isLargerThan62em ? '0px' : '16px'}
-                            ml={isLargerThan62em ? '25%' : '0'}
+                            pt={isLargerThan62emW ? '0px' : '16px'}
+                            ml={isLargerThan62emW ? '25%' : '0'}
                             fontSize="xl"
                             textOverflow="ellipsis"
                             height="100%"
-                            overflow="auto"
                         >
                             {post.description}
                         </Text>
