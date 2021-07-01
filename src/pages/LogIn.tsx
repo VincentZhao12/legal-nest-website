@@ -36,8 +36,8 @@ const LogIn: FC<LogInProps> = () => {
         setError('');
         login(email, pass)
             .then(() => {
-                history.push('/');
                 setLoading(false);
+                history.push('/');
             })
             .catch((error: firebase.auth.AuthError) => {
                 setLoading(false);
