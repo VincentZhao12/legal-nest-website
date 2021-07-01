@@ -110,9 +110,9 @@ const Feed: FC<FeedProps> = ({ match }) => {
                 mb="24px"
             >
                 {posts.map((post, index) => (
-                    <Link to={`/posts/${post.id}`} key={index}>
+                    //<Link to={`/posts/${post.id}`} key={index}>
                         <Post post={post} />
-                    </Link>
+                    //</Link>
                 ))}
             </Container>
         </>

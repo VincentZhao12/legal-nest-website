@@ -90,30 +90,31 @@ const Post: FC<PostProps> = ({ post }) => {
 
             <Flex> 
 
-            <Stack 
-                minW="50px" 
-                mr="24px"
-                alignItems="center"
-                justifyContent="center">
+                <Stack 
+                    minW="50px" 
+                    mr="24px"
+                    alignItems="center"
+                    justifyContent="center">
 
-                    <Icon
-                        onClick={handleClick}
-                        fill="danger.300"
-                        as={supported ? AiFillHeart : AiOutlineHeart}
-                        width="40px"
-                        height="40px"
-                    />
-                    <Text mr="8px" fontSize="3xl">
-                        {post.supports +
-                            (initiallySupported
-                                ? supported
-                                    ? 0
-                                    : -1
-                                : supported
-                                ? 1
-                                : 0)}
-                    </Text>
-            </Stack>
+                        <Icon
+                            onClick={handleClick}
+                            fill="danger.300"
+                            as={supported ? AiFillHeart : AiOutlineHeart}
+                            width="40px"
+                            height="40px"
+                        />
+
+                        <Text mr="8px" fontSize="3xl">
+                            {post.supports +
+                                (initiallySupported
+                                    ? supported
+                                        ? 0
+                                        : -1
+                                    : supported
+                                    ? 1
+                                    : 0)}
+                        </Text>
+                </Stack>
 
                 <Box>
                     <Flex justifyContent="space-between">
