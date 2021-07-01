@@ -1,10 +1,26 @@
-import { Box, Container, Heading, Stack } from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Container,
+    Heading,
+    HStack,
+    Modal,
+    ModalContent,
+    ModalOverlay,
+    Spacer,
+    Spinner,
+    Stack,
+    useDisclosure,
+} from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Post from '../components/feed-components/Post';
 import { FeedParams, Match } from '../components/Routes';
 import firebase, { db } from '../firebase';
 import './Feed.css';
+import { ReactComponent as CreatePostImg } from '../images/create-post.svg';
+import CreatePost from './CreatePost';
 
 interface FeedProps {
     match: Match<FeedParams>;
@@ -26,8 +42,10 @@ const Feed: FC<FeedProps> = ({ match }) => {
     const [posts, setPosts] = useState<PostType[]>([]);
     const user = match.params.uid;
     const [username, setUsername] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
+        setLoading(true);
         let postDocs:
             | firebase.firestore.CollectionReference
             | firebase.firestore.Query;
@@ -57,27 +75,88 @@ const Feed: FC<FeedProps> = ({ match }) => {
             posts.sort((post1, post2) => post2.supports - post1.supports);
 
             setPosts(posts);
-        })();
+        })().then(() => setLoading(false));
     }, [user]);
+
+    if (loading)
+        return (
+            <Container
+                maxHeight="100%"
+                height="60%"
+                width="90%"
+                maxWidth="100%"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Spinner color="secondary.400" size="lg" />
+            </Container>
+        );
+
+    if (!posts || !posts.length) return <NoPosts />;
     return (
         <>
             {' '}
             {user && <UserHeader username={username} />}
             <Container
-                width="100%"
+                width="60%"
                 maxWidth="100%"
-                centerContent
+                display="flex"
+                alignItems="center"
                 justifyContent="center"
-                className="container"
+                flexDirection="column"
                 overflowX="hidden"
                 overflowY="hidden"
                 mb="24px"
             >
                 {posts.map((post, index) => (
-                    <Post post={post} key={index} />
+                    <Link to={`/posts/${post.id}`} key={index}>
+                        <Post post={post} />
+                    </Link>
                 ))}
             </Container>
         </>
+    );
+};
+
+const NoPosts: FC = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    return (
+        <Container
+            maxHeight="100%"
+            height="60%"
+            width="90%"
+            maxWidth="100%"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+        >
+            <HStack>
+                <CreatePostImg />
+                <Spacer />
+                <Stack width="70%" spacing={10} alignItems="center">
+                    <Heading textAlign="center">No Posts</Heading>
+                    <Heading textAlign="center">
+                        Create your first post here!
+                    </Heading>
+                    <Button
+                        colorScheme="primary"
+                        width="fit-content"
+                        fontSize="xl"
+                        padding="7"
+                        onClick={onOpen}
+                    >
+                        Create
+                    </Button>
+                </Stack>
+            </HStack>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <CreatePost onClose={onClose} />
+                </ModalContent>
+            </Modal>
+        </Container>
     );
 };
 

@@ -113,7 +113,7 @@ export default function WithSubnavigation() {
                                         background="inherit"
                                         icon={<AddIcon color="secondary.400" />}
                                         onClick={onOpen}
-                                        marginRight="2"
+                                        marginRight="4"
                                     />
                                 </Tooltip>
                                 <Menu>
@@ -165,7 +165,7 @@ export default function WithSubnavigation() {
                                     fontWeight={400}
                                     variant={'link'}
                                     to="/login"
-                                    marginRight="2"
+                                    marginRight="4"
                                 >
                                     Log In
                                 </Button>
