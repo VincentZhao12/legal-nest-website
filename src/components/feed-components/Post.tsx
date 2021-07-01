@@ -13,6 +13,7 @@ import {
     Modal,
     ModalContent,
     ModalOverlay,
+    Flex,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { PostType } from '../../pages/Feed';
@@ -29,7 +30,7 @@ interface PostProps {
 }
 
 const Post: FC<PostProps> = ({ post }) => {
-    const [isLargerThan62emW] = useMediaQuery('(min-width:62em)');
+    const [isLargerThan62em] = useMediaQuery('(min-width:62em)');
     const [username, setUsername] = useState<string>('');
     const [supported, setSupported] = useState<boolean>(false);
     const [initiallySupported, setInitallySupported] = useState<boolean>(false);
@@ -78,20 +79,26 @@ const Post: FC<PostProps> = ({ post }) => {
 
     return (
         <Box
-            height="75vh"
-            width="100%"
+            width="90%"
             border="solid"
             borderColor="other.400"
-            borderRadius={50}
+            borderRadius={"10px"}
             margin="0"
-            padding="16px"
+            padding="24px"
             marginTop="2%"
         >
-            <HStack height="100%" width="100%" marginRight="0">
-                <Stack minW="50px" alignItems="center">
+
+            <Flex> 
+
+            <Stack 
+                minW="50px" 
+                mr="24px"
+                alignItems="center"
+                justifyContent="center">
+
                     <Icon
                         onClick={handleClick}
-                        fill="#f13e2d"
+                        fill="danger.300"
                         as={supported ? AiFillHeart : AiOutlineHeart}
                         width="40px"
                         height="40px"
@@ -106,34 +113,18 @@ const Post: FC<PostProps> = ({ post }) => {
                                 ? 1
                                 : 0)}
                     </Text>
-                </Stack>
+            </Stack>
 
-                <Grid
-                    gridTemplateColumns="repeat(3, 1fr)"
-                    gridTemplateRows=".1fr 1fr 1fr"
-                    height="100%"
-                    width="90%"
-                    marginBottom="10"
-                >
-                    <GridItem colSpan={2} minH="200px">
-                        <Stack>
-                            <HStack as={Link} to={`/feed/${post.creator}`}>
-                                <Icon>
-                                    <UserIcon />
-                                </Icon>
+                <Box>
+                    <Flex justifyContent="space-between">
+                        <HStack as={Link} to={`/feed/${post.creator}`}>
+                            <Icon>
+                                <UserIcon />
+                            </Icon>
 
-                                <Text>{username}</Text>
-                            </HStack>
-                            <Text>
-                                Occurred{' '}
-                                <b>{generateNiceDate(post.eventDate)}</b>
-                                <br /> Posted{' '}
-                                <b>{generateNiceDate(post.posted)}</b>
-                            </Text>
-                            <Heading pb="16px">{post.title}</Heading>
-                        </Stack>
-                    </GridItem>
-                    <GridItem minH="200px">
+                            <Text>{username}</Text>
+                        </HStack>
+
                         {currentUser?.uid === post.creator && (
                             <Button
                                 colorScheme="primary"
@@ -143,50 +134,52 @@ const Post: FC<PostProps> = ({ post }) => {
                                 Edit Post
                             </Button>
                         )}
-                    </GridItem>
-                    <GridItem colSpan={true ? 2 : 3} rowSpan={true ? 2 : 1}>
-                        <video
-                            src={post.video}
-                            title={post.title}
-                            controls
-                            autoPlay={false}
-                            style={{
-                                height: '100%',
-                                backgroundColor: 'black',
-                                width: '100%',
-                                minHeight: '100px',
-                            }}
-                        />
-                    </GridItem>
-                    <GridItem
-                        colSpan={true ? 1 : 3}
-                        rowSpan={true ? 2 : 1}
-                        justifyContent="center"
-                        overflow="auto"
-                        height="100%"
-                    >
+                    </Flex>
+                    
+                    <Text>
+                        Occurred{' '}
+                        <b>{generateNiceDate(post.eventDate)}</b>
+                        <br /> Posted{' '}
+                        <b>{generateNiceDate(post.posted)}</b>
+                    </Text>
+
+                    <Heading mt="16px">{post.title}</Heading>
+
+                    <Flex flexFlow={isLargerThan62em ? "row" : "wrap"}>
+                        <Flex
+                            flexShrink={0}
+                            justifyContent="center"
+                            width={isLargerThan62em ? "60%" : "100%"}
+                            mr="0px">
+
+                            <video
+                                src={post.video}
+                                title={post.title}
+                                controls
+                                autoPlay={false}
+                                style={{
+                                    backgroundColor: 'black',
+                                    width: '100%',
+                                    height: '50vh',
+                                    maxWidth: '100%',
+                                    marginTop: '24px',
+                                }}
+                            />
+
+                        </Flex>
+
                         <Text
-                            pt={true ? '0px' : '16px'}
-                            ml={true ? '25%' : '0'}
+                            mt="16px"
+                            ml={isLargerThan62em ? "24px" : "0px"}
                             fontSize="xl"
                             textOverflow="ellipsis"
                             height="100%"
                         >
                             {post.description}
                         </Text>
-                    </GridItem>
-                </Grid>
-            </HStack>
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <CreatePost
-                        onClose={onClose}
-                        postData={post}
-                        postId={post.id}
-                    />
-                </ModalContent>
-            </Modal>
+                    </Flex>
+                </Box>
+            </Flex>
         </Box>
     );
 };

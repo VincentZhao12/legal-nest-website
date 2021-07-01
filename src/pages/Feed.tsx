@@ -71,8 +71,7 @@ const Feed: FC<FeedProps> = ({ match }) => {
                 className="container"
                 overflowX="hidden"
                 overflowY="hidden"
-                margin="0"
-                padding="0"
+                mb="24px"
             >
                 {posts.map((post, index) => (
                     <Post post={post} key={index} />
