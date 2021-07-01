@@ -144,10 +144,7 @@ const Post: FC<PostProps> = ({ post }) => {
                             </Button>
                         )}
                     </GridItem>
-                    <GridItem
-                        colSpan={isLargerThan62emW ? 2 : 3}
-                        rowSpan={isLargerThan62emW ? 2 : 1}
-                    >
+                    <GridItem colSpan={true ? 2 : 3} rowSpan={true ? 2 : 1}>
                         <video
                             src={post.video}
                             title={post.title}
@@ -162,15 +159,15 @@ const Post: FC<PostProps> = ({ post }) => {
                         />
                     </GridItem>
                     <GridItem
-                        colSpan={isLargerThan62emW ? 1 : 3}
-                        rowSpan={isLargerThan62emW ? 2 : 1}
+                        colSpan={true ? 1 : 3}
+                        rowSpan={true ? 2 : 1}
                         justifyContent="center"
                         overflow="auto"
                         height="100%"
                     >
                         <Text
-                            pt={isLargerThan62emW ? '0px' : '16px'}
-                            ml={isLargerThan62emW ? '25%' : '0'}
+                            pt={true ? '0px' : '16px'}
+                            ml={true ? '25%' : '0'}
                             fontSize="xl"
                             textOverflow="ellipsis"
                             height="100%"
