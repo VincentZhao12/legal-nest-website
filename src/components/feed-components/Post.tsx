@@ -79,7 +79,7 @@ const Post: FC<PostProps> = ({ post }) => {
 
     return (
         <Box
-            width="90%"
+            width="90% || fit-content"
             border="solid"
             borderColor="other.400"
             borderRadius={"10px"}
