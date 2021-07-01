@@ -79,7 +79,7 @@ const Post: FC<PostProps> = ({ post }) => {
     return (
         <Box
             height="75vh"
-            width="60%"
+            width="100%"
             border="solid"
             borderColor="other.400"
             borderRadius={50}
@@ -110,12 +110,12 @@ const Post: FC<PostProps> = ({ post }) => {
 
                 <Grid
                     gridTemplateColumns="repeat(3, 1fr)"
-                    gridTemplateRows="15% 37.5% 37.5%"
+                    gridTemplateRows=".1fr 1fr 1fr"
                     height="100%"
                     width="90%"
                     marginBottom="10"
                 >
-                    <GridItem colSpan={2}>
+                    <GridItem colSpan={2} minH="200px">
                         <Stack>
                             <HStack as={Link} to={`/feed/${post.creator}`}>
                                 <Icon>
@@ -133,7 +133,7 @@ const Post: FC<PostProps> = ({ post }) => {
                             <Heading pb="16px">{post.title}</Heading>
                         </Stack>
                     </GridItem>
-                    <GridItem>
+                    <GridItem minH="200px">
                         {currentUser?.uid === post.creator && (
                             <Button
                                 colorScheme="primary"
