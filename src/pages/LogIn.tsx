@@ -16,7 +16,7 @@ import {
     CloseButton,
     Container,
 } from '@chakra-ui/react';
-import React, { FC, useState } from 'react';
+import React, { FC, SyntheticEvent, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import firebase from '../firebase';
@@ -31,7 +31,8 @@ const LogIn: FC<LogInProps> = () => {
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: SyntheticEvent) => {
+        e.preventDefault();
         setLoading(true);
         setError('');
         login(email, pass)
@@ -75,31 +76,34 @@ const LogIn: FC<LogInProps> = () => {
             <Stack align={'center'}>
                 <Box rounded={'lg'} boxShadow={'lg'} p={8} minWidth="xs">
                     <Stack spacing={4}>
-                        <FormControl id="email">
-                            <FormLabel>Email address</FormLabel>
-                            <Input
-                                type="email"
-                                bg="inherit"
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </FormControl>
-                        <FormControl id="password">
-                            <FormLabel>Password</FormLabel>
-                            <Input
-                                type="password"
-                                bg="inherit"
-                                onChange={(e) => setPass(e.target.value)}
-                            />
-                        </FormControl>
-                        <Stack spacing={10}>
-                            <Button
-                                colorScheme="primary"
-                                onClick={handleSubmit}
-                                isLoading={loading}
-                            >
-                                Log in
-                            </Button>
-                        </Stack>
+                        <form onSubmit={handleSubmit}>
+                            <FormControl id="email">
+                                <FormLabel>Email address</FormLabel>
+                                <Input
+                                    type="email"
+                                    bg="inherit"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </FormControl>
+                            <FormControl id="password">
+                                <FormLabel>Password</FormLabel>
+                                <Input
+                                    type="password"
+                                    bg="inherit"
+                                    onChange={(e) => setPass(e.target.value)}
+                                />
+                            </FormControl>
+                            <Stack spacing={10}>
+                                <Button
+                                    colorScheme="primary"
+                                    type="submit"
+                                    isLoading={loading}
+                                    marginTop="2"
+                                >
+                                    Log in
+                                </Button>
+                            </Stack>
+                        </form>
                         <Stack spacing={10} alignItems="center">
                             <Text>
                                 Don't have an account?{' '}

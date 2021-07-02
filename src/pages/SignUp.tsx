@@ -15,7 +15,7 @@ import {
     AlertDescription,
     CloseButton,
 } from '@chakra-ui/react';
-import React, { FC, useState } from 'react';
+import React, { FC, SyntheticEvent, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import firebase, { db } from '../firebase';
@@ -30,31 +30,46 @@ const Signup: FC<SignupProps> = () => {
     const { signup } = useAuth();
     const [error, setError] = useState('');
     const history = useHistory();
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const handleSubmit = () => {
-        setError('');
-        if (pass !== passConf)
-            setError("Your password and password confirmation don't match.");
-        signup(email, pass)
-            .then((user: firebase.auth.UserCredential) => {
-                db.collection('users')
-                    .doc(user.user ? user.user.uid : '')
-                    .set({
-                        screenName,
-                        id: user.user ? user.user.uid : '',
-                    });
-                history.push('/');
-            })
-            .catch((error: firebase.auth.AuthError) => {
-                if (error.code === 'auth/invalid-email')
-                    setError('You did not enter a valid E-mail');
-                else if (error.code === 'auth/weak-password')
-                    setError('Your password is too weak');
-                else if (error.code === 'auth/email-already-in-use')
-                    setError(
-                        'That E-mail address is being used by someone else',
-                    );
-            });
+    const handleSubmit = (e: SyntheticEvent) => {
+        e.preventDefault();
+        if (!loading) {
+            setLoading(true);
+            setError('');
+            if (pass !== passConf) {
+                setError(
+                    "Your password and password confirmation don't match.",
+                );
+                setLoading(false);
+                return;
+            }
+
+            signup(email, pass)
+                .then((user: firebase.auth.UserCredential) => {
+                    db.collection('users')
+                        .doc(user.user ? user.user.uid : '')
+                        .set({
+                            screenName,
+                            id: user.user ? user.user.uid : '',
+                        })
+                        .then(() => {
+                            setLoading(false);
+                            history.push('/');
+                        });
+                })
+                .catch((error: firebase.auth.AuthError) => {
+                    setLoading(false);
+                    if (error.code === 'auth/invalid-email')
+                        setError('You did not enter a valid E-mail');
+                    else if (error.code === 'auth/weak-password')
+                        setError('Your password is too weak');
+                    else if (error.code === 'auth/email-already-in-use')
+                        setError(
+                            'That E-mail address is being used by someone else',
+                        );
+                });
+        }
     };
 
     return (
@@ -80,45 +95,53 @@ const Signup: FC<SignupProps> = () => {
             <Stack align={'center'}>
                 <Box rounded={'lg'} boxShadow={'lg'} p={8} minWidth="xs">
                     <Stack spacing={4}>
-                        <FormControl id="screen-name">
-                            <FormLabel>Screen Name</FormLabel>
-                            <Input
-                                bg="inherit"
-                                onChange={(e) => setScreenName(e.target.value)}
-                            />
-                        </FormControl>
-                        <FormControl id="email">
-                            <FormLabel>Email address</FormLabel>
-                            <Input
-                                type="email"
-                                bg="inherit"
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </FormControl>
-                        <FormControl id="password">
-                            <FormLabel>Password</FormLabel>
-                            <Input
-                                type="password"
-                                bg="inherit"
-                                onChange={(e) => setPass(e.target.value)}
-                            />
-                        </FormControl>
-                        <FormControl id="password-conf">
-                            <FormLabel>Password Conformation</FormLabel>
-                            <Input
-                                type="password"
-                                bg="inherit"
-                                onChange={(e) => setPassConf(e.target.value)}
-                            />
-                        </FormControl>
-                        <Stack spacing={10}>
-                            <Button
-                                colorScheme="primary"
-                                onClick={handleSubmit}
-                            >
-                                Sign up
-                            </Button>
-                        </Stack>
+                        <form onSubmit={handleSubmit}>
+                            <FormControl id="screen-name">
+                                <FormLabel>Screen Name</FormLabel>
+                                <Input
+                                    bg="inherit"
+                                    onChange={(e) =>
+                                        setScreenName(e.target.value)
+                                    }
+                                />
+                            </FormControl>
+                            <FormControl id="email">
+                                <FormLabel>Email address</FormLabel>
+                                <Input
+                                    type="email"
+                                    bg="inherit"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </FormControl>
+                            <FormControl id="password">
+                                <FormLabel>Password</FormLabel>
+                                <Input
+                                    type="password"
+                                    bg="inherit"
+                                    onChange={(e) => setPass(e.target.value)}
+                                />
+                            </FormControl>
+                            <FormControl id="password-conf">
+                                <FormLabel>Password Conformation</FormLabel>
+                                <Input
+                                    type="password"
+                                    bg="inherit"
+                                    onChange={(e) =>
+                                        setPassConf(e.target.value)
+                                    }
+                                />
+                            </FormControl>
+                            <Stack spacing={10} marginTop="4">
+                                <Button
+                                    colorScheme="primary"
+                                    type="submit"
+                                    isLoading={loading}
+                                >
+                                    Sign up
+                                </Button>
+                            </Stack>
+                        </form>
+
                         <Stack spacing={10} alignItems="center">
                             <Text>
                                 Already have an account?{' '}
