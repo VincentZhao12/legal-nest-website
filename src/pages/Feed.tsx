@@ -11,6 +11,7 @@ import {
     Spinner,
     Stack,
     useDisclosure,
+    useMediaQuery,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { useEffect } from 'react';
@@ -38,6 +39,7 @@ export interface PostType {
 }
 
 const Feed: FC<FeedProps> = ({ match }) => {
+    const [isLargerThan62em] = useMediaQuery('(min-width:1000px)');
     const [posts, setPosts] = useState<PostType[]>([]);
     const user = match.params.uid;
     const [username, setUsername] = useState<string>('');
@@ -82,13 +84,13 @@ const Feed: FC<FeedProps> = ({ match }) => {
             <Container
                 maxHeight="100%"
                 height="60%"
-                width="90%"
-                maxWidth="100%"
+                width={isLargerThan62em ? '90%' : '100%'}
+                maxWidth="110%"
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
             >
-                <Spinner color="secondary.400" size="lg" />
+                <Spinner color="secondary.400" size="xl" />
             </Container>
         );
 

@@ -91,7 +91,7 @@ const Post: FC<PostProps> = ({ post }) => {
 
     return (
         <Box
-            width="90%"
+            width={isLargerThan62em ? '90%' : '100%'}
             border="solid"
             borderColor="other.400"
             borderRadius={'10px'}
@@ -101,7 +101,7 @@ const Post: FC<PostProps> = ({ post }) => {
         >
             <Flex>
                 <Stack
-                    minW="50px"
+                    minW="2vw"
                     mr="24px"
                     alignItems="center"
                     justifyContent="center"
@@ -129,13 +129,13 @@ const Post: FC<PostProps> = ({ post }) => {
                 </Stack>
 
                 <Box width="100%">
-                    <Flex width="100%">
+                    <Flex width="100%" fontSize={'lg'}>
                         <HStack as={Link} to={`/feed/${post.creator}`}>
                             <Icon>
                                 <UserIcon />
                             </Icon>
 
-                            <Text>{username}</Text>
+                            <Text fontWeight="bold">{username}</Text>
                         </HStack>
                         <Spacer />
                         {currentUser?.uid === post.creator && (
@@ -152,7 +152,7 @@ const Post: FC<PostProps> = ({ post }) => {
                         )}
                     </Flex>
 
-                    <Text>
+                    <Text fontSize="sm">
                         Occurred <b>{generateNiceDate(post.eventDate)}</b>
                         <br /> Posted <b>{generateNiceDate(post.posted)}</b>
                     </Text>
