@@ -78,7 +78,7 @@ const CreatePost: FC<CreatePostProps> = ({ onClose, postData, postId }) => {
 
         let url: string = '';
         try {
-            if (videoType === 'upload') {
+            if (videoType === 'upload' && file) {
                 const videoRef = storage.ref(
                     `${currentUser?.uid}/${Date.now()}`,
                 );

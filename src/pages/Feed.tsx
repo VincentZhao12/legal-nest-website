@@ -14,7 +14,6 @@ import {
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import Post from '../components/feed-components/Post';
 import { FeedParams, Match } from '../components/Routes';
 import firebase, { db } from '../firebase';
@@ -110,9 +109,7 @@ const Feed: FC<FeedProps> = ({ match }) => {
                 mb="24px"
             >
                 {posts.map((post, index) => (
-                    <Link to={`/posts/${post.id}`} key={index}>
-                        <Post post={post} />
-                    </Link>
+                    <Post post={post} key={index} />
                 ))}
             </Container>
         </>

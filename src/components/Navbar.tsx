@@ -23,6 +23,7 @@ import {
     Modal,
     ModalOverlay,
     ModalContent,
+    HStack,
 } from '@chakra-ui/react';
 import {
     HamburgerIcon,
@@ -37,6 +38,7 @@ import { ReactComponent as UserIcon } from '../images/user.svg';
 import { ReactComponent as ExitIcon } from '../images/exit.svg';
 import { ReactComponent as PostIcon } from '../images/post.svg';
 import CreatePost from '../pages/CreatePost';
+import { ReactComponent as Logo } from '../images/logo.svg';
 
 export default function WithSubnavigation() {
     const { isOpen, onToggle } = useDisclosure();
@@ -80,21 +82,18 @@ export default function WithSubnavigation() {
                     <Flex
                         flex={{ base: 1 }}
                         justify={{ base: 'center', md: 'start' }}
+                        height="60px"
                     >
-                        <Text
-                            textAlign={useBreakpointValue({
-                                base: 'center',
-                                md: 'left',
-                            })}
-                            fontFamily={'heading'}
-                            color={useColorModeValue('gray.800', 'white')}
-                            as={Link}
-                            to="/"
-                        >
-                            Legal Nest
-                        </Text>
+                        <Link to={currentUser ? '/feed' : '/'}>
+                            <Logo height="60px" />
+                        </Link>
 
-                        <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
+                        <Flex
+                            display={{ base: 'none', md: 'flex' }}
+                            ml={10}
+                            justifyContent="center"
+                            alignItems="center"
+                        >
                             <DesktopNav />
                         </Flex>
                     </Flex>
@@ -208,16 +207,25 @@ const DesktopNav = () => {
     const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
     return (
-        <Stack direction={'row'} spacing={4}>
+        <Stack
+            direction={'row'}
+            spacing={4}
+            justifyContent="center"
+            height="inherit"
+        >
             {NAV_ITEMS.map((navItem) => (
-                <Box key={navItem.label}>
+                <Box
+                    key={navItem.label}
+                    justifyContent="center"
+                    alignItems="center"
+                >
                     <Popover trigger={'hover'} placement={'bottom-start'}>
                         <PopoverTrigger>
                             <StyledLink
                                 p={2}
                                 as={Link}
                                 to={navItem.to ?? '/'}
-                                fontSize={'sm'}
+                                fontSize={'mds'}
                                 fontWeight={500}
                                 color={linkColor}
                                 _hover={{
@@ -412,11 +420,11 @@ const NAV_ITEMS: Array<NavItem> = [
     //     ],
     // },
     {
-        label: 'Learn Your Rights',
-        to: '/rights',
-    },
-    {
         label: 'Feed',
         to: '/feed',
+    },
+    {
+        label: 'Learn Your Rights',
+        to: '/rights',
     },
 ];

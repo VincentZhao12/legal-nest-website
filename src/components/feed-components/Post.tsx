@@ -1,7 +1,5 @@
 import {
     Box,
-    Grid,
-    GridItem,
     Heading,
     HStack,
     Icon,
@@ -14,6 +12,8 @@ import {
     ModalContent,
     ModalOverlay,
     Flex,
+    Spacer,
+    IconButton,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { PostType } from '../../pages/Feed';
@@ -23,6 +23,7 @@ import { useEffect } from 'react';
 import firebase, { db } from '../../firebase';
 import { Link } from 'react-router-dom';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { MdFlag } from 'react-icons/md';
 import CreatePost from '../../pages/CreatePost';
 
 interface PostProps {
@@ -36,6 +37,10 @@ const Post: FC<PostProps> = ({ post }) => {
     const [initiallySupported, setInitallySupported] = useState<boolean>(false);
     const { currentUser } = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [supportsDisplay, setSupportsDisplay] = useState<number>(
+        post.supports,
+    );
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const getUsername = async () => {
@@ -53,10 +58,13 @@ const Post: FC<PostProps> = ({ post }) => {
         getUsername();
     }, [post, currentUser]);
 
-    const handleClick = () => {
+    const handleClick = async () => {
         setSupported(!supported);
-        let supporters = post.supporters || [];
-        let supports = post.supports;
+        setLoading(true);
+
+        const postDoc = await db.collection('posts').doc(post.id).get();
+        let supports = postDoc?.data()?.supports;
+        let supporters = postDoc?.data()?.supporters;
 
         if (supported) {
             supports--;
@@ -72,51 +80,58 @@ const Post: FC<PostProps> = ({ post }) => {
         }
 
         db.collection('posts').doc(post.id).update({
-            supports,
+            supports: supporters.length,
             supporters,
         });
+
+        console.log(supports, supporters);
+
+        setLoading(false);
+
+        setSupportsDisplay(supports);
     };
 
     return (
         <Box
-            width="90% || fit-content"
+            width="90%"
             border="solid"
             borderColor="other.400"
-            borderRadius={"10px"}
+            borderRadius={'10px'}
             margin="0"
             padding="24px"
             marginTop="2%"
         >
-
-            <Flex> 
-
-            <Stack 
-                minW="50px" 
-                mr="24px"
-                alignItems="center"
-                justifyContent="center">
-
-                    <Icon
+            <Flex>
+                <Stack
+                    minW="50px"
+                    mr="24px"
+                    alignItems="center"
+                    justifyContent="center"
+                >
+                    <IconButton
                         onClick={handleClick}
-                        fill="danger.300"
-                        as={supported ? AiFillHeart : AiOutlineHeart}
-                        width="40px"
-                        height="40px"
+                        icon={
+                            <Icon
+                                as={supported ? AiFillHeart : AiOutlineHeart}
+                                fill="danger.300"
+                                width="40px"
+                                height="40px"
+                            />
+                        }
+                        bg="inherit"
+                        aria-label="Support"
+                        disabled={loading}
                     />
-                    <Text mr="8px" fontSize="3xl">
-                        {post.supports +
-                            (initiallySupported
-                                ? supported
-                                    ? 0
-                                    : -1
-                                : supported
-                                ? 1
-                                : 0)}
-                    </Text>
-            </Stack>
 
-                <Box>
-                    <Flex justifyContent="space-between">
+                    <Text mr="8px" fontSize="3xl">
+                        {supportsDisplay}
+                    </Text>
+
+                    <ReportButton />
+                </Stack>
+
+                <Box width="100%">
+                    <Flex width="100%">
                         <HStack as={Link} to={`/feed/${post.creator}`}>
                             <Icon>
                                 <UserIcon />
@@ -124,53 +139,55 @@ const Post: FC<PostProps> = ({ post }) => {
 
                             <Text>{username}</Text>
                         </HStack>
-
+                        <Spacer />
                         {currentUser?.uid === post.creator && (
                             <Button
                                 colorScheme="primary"
                                 float="right"
-                                onClick={onOpen}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    onOpen();
+                                }}
                             >
                                 Edit Post
                             </Button>
                         )}
                     </Flex>
-                    
+
                     <Text>
-                        Occurred{' '}
-                        <b>{generateNiceDate(post.eventDate)}</b>
-                        <br /> Posted{' '}
-                        <b>{generateNiceDate(post.posted)}</b>
+                        Occurred <b>{generateNiceDate(post.eventDate)}</b>
+                        <br /> Posted <b>{generateNiceDate(post.posted)}</b>
                     </Text>
 
                     <Heading mt="16px">{post.title}</Heading>
 
-                    <Flex flexFlow={isLargerThan62em ? "row" : "wrap"}>
-                        <Flex
-                            flexShrink={0}
-                            justifyContent="center"
-                            width={isLargerThan62em ? "60%" : "100%"}
-                            mr="0px">
-
-                            <video
-                                src={post.video}
-                                title={post.title}
-                                controls
-                                autoPlay={false}
-                                style={{
-                                    backgroundColor: 'black',
-                                    width: '100%',
-                                    height: '50vh',
-                                    maxWidth: '100%',
-                                    marginTop: '24px',
-                                }}
-                            />
-
-                        </Flex>
+                    <Flex flexFlow={isLargerThan62em ? 'row' : 'wrap'}>
+                        {post.video && (
+                            <Flex
+                                flexShrink={0}
+                                justifyContent="center"
+                                width={isLargerThan62em ? '60%' : '100%'}
+                                mr="0px"
+                            >
+                                <video
+                                    src={post.video}
+                                    title={post.title}
+                                    controls
+                                    autoPlay={false}
+                                    style={{
+                                        backgroundColor: 'black',
+                                        width: '100%',
+                                        height: '50vh',
+                                        maxWidth: '100%',
+                                        marginTop: '24px',
+                                    }}
+                                />
+                            </Flex>
+                        )}
 
                         <Text
                             mt="16px"
-                            ml={isLargerThan62em ? "24px" : "0px"}
+                            ml={isLargerThan62em && post.video ? '24px' : '0px'}
                             fontSize="xl"
                             textOverflow="ellipsis"
                             height="100%"
@@ -180,7 +197,48 @@ const Post: FC<PostProps> = ({ post }) => {
                     </Flex>
                 </Box>
             </Flex>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <CreatePost
+                        onClose={onClose}
+                        postData={post}
+                        postId={post.id}
+                    />
+                </ModalContent>
+            </Modal>
         </Box>
+    );
+};
+
+const ReportButton = () => {
+    const { isOpen, onClose, onOpen } = useDisclosure();
+    return (
+        <>
+            <Icon
+                onClick={onOpen}
+                fill="other.300"
+                as={MdFlag}
+                width="40px"
+                height="40px"
+            />
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <iframe
+                        style={{ padding: 10 }}
+                        src="https://docs.google.com/forms/d/e/1FAIpQLSfPSsMonSC7ADhO198a0XHIIqexHhpZRcyXtiQB2c8gnx_sHw/viewform?embedded=true"
+                        height="570"
+                        frameBorder="0"
+                        marginHeight={0}
+                        marginWidth={0}
+                    >
+                        Loading…
+                    </iframe>
+                </ModalContent>
+            </Modal>
+        </>
     );
 };
 

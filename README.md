@@ -6,7 +6,7 @@ Today, we often see incidents of police violence and discrimination against the 
 
 On the website users will be able to view other users' encounters with police and give advice. The website will also contain a section with your rights during encounters with law enforcement to allow the user to be more informed in future interactions with police.
 
-###### To Run (development)
+#### To Run (development)
 
 Have node installed on your computer
 
