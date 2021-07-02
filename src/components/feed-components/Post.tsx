@@ -34,7 +34,6 @@ const Post: FC<PostProps> = ({ post }) => {
     const [isLargerThan62em] = useMediaQuery('(min-width:62em)');
     const [username, setUsername] = useState<string>('');
     const [supported, setSupported] = useState<boolean>(false);
-    const [initiallySupported, setInitallySupported] = useState<boolean>(false);
     const { currentUser } = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [supportsDisplay, setSupportsDisplay] = useState<number>(
@@ -52,7 +51,6 @@ const Post: FC<PostProps> = ({ post }) => {
         };
         if (post.supporters?.includes(currentUser?.uid || '')) {
             setSupported(true);
-            setInitallySupported(true);
         }
 
         getUsername();
@@ -233,6 +231,7 @@ const ReportButton = () => {
                         frameBorder="0"
                         marginHeight={0}
                         marginWidth={0}
+                        title="Report Form"
                     >
                         Loading…
                     </iframe>

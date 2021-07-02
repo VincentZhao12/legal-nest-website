@@ -12,7 +12,6 @@ import {
     PopoverTrigger,
     PopoverContent,
     useColorModeValue,
-    useBreakpointValue,
     useDisclosure,
     Menu,
     MenuButton,
@@ -23,7 +22,6 @@ import {
     Modal,
     ModalOverlay,
     ModalContent,
-    HStack,
 } from '@chakra-ui/react';
 import {
     HamburgerIcon,
