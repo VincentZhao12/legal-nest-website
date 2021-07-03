@@ -11,7 +11,7 @@ const Footer: FC = () => {
             padding="16px" 
             backgroundColor="secondary.300" 
             style={{
-                position: 'absolute',
+                position: "absolute",
                 top: "100vh",
                 left: 0,
                 right: 0,
