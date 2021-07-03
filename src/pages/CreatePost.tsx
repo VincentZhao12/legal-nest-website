@@ -193,7 +193,7 @@ const CreatePost: FC<CreatePostProps> = ({ onClose, postData, postId }) => {
                                         onChange={(e) => setSelectedVideo(e)}
                                         value={selectedVideo}
                                     >
-                                        <Radio value="">None</Radio>
+                                        <Radio mb={8} value="">None</Radio>
                                         {userVideos?.map((video) => (
                                             <Radio
                                                 value={video}
@@ -202,6 +202,7 @@ const CreatePost: FC<CreatePostProps> = ({ onClose, postData, postId }) => {
                                                 alignItems="center"
                                                 justifyContent="center"
                                                 width="100%"
+                                                mb={8}
                                                 onSelect={() => {
                                                     if (video === selectedVideo)
                                                         setSelectedVideo('');
