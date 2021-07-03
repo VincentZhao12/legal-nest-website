@@ -16,9 +16,12 @@ const App = () => {
         >
             <ContextProviders>
                 <Navbar />
-                <div className="content">
+                <div
+                    className="content"
+                    style={{ display: 'flex', flexDirection: 'column' }}
+                >
                     <Routes />
-                    <Footer/>
+                    <Footer />
                 </div>
             </ContextProviders>
         </div>

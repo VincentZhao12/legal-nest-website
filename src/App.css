@@ -1,4 +1,14 @@
 .content {
     height: calc(100vh - 78px);
-    overflow-x: hidden;
+}
+
+.content::-webkit-scrollbar {
+    display: none;
+}
+
+.content::-webkit-scrollbar-thumb {
+    display: none;
+}
+.content::-webkit-scrollbar-corner {
+    display: none;
 }

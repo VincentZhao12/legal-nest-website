@@ -83,10 +83,8 @@ const Feed: FC<FeedProps> = ({ match }) => {
         return (
             <Container
                 maxHeight="100%"
-                height="60%"
                 width={isLargerThan62em ? '90%' : '100%'}
                 maxWidth="110%"
-                display="flex"
                 alignItems="center"
                 justifyContent="center"
             >
@@ -100,19 +98,19 @@ const Feed: FC<FeedProps> = ({ match }) => {
             {' '}
             {user && <UserHeader username={username} />}
             <Container
-                width="60%"
+                width="100%"
                 maxWidth="100%"
-                display="flex"
                 alignItems="center"
-                justifyContent="center"
                 flexDirection="column"
                 overflowX="hidden"
-                overflowY="hidden"
                 mb="24px"
+                overflowY="auto"
             >
-                {posts.map((post, index) => (
-                    <Post post={post} key={index} />
-                ))}
+                <Stack width="100%" justifyContent="center" alignItems="center">
+                    {posts.map((post, index) => (
+                        <Post post={post} key={index} />
+                    ))}
+                </Stack>
             </Container>
         </>
     );
@@ -122,8 +120,6 @@ const NoPosts: FC = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     return (
         <Container
-            maxHeight="100%"
-            height="60%"
             width="90%"
             maxWidth="100%"
             display="flex"
