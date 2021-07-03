@@ -21,7 +21,14 @@ interface LearnRightsProps {}
 
 const LearnRights: FC<LearnRightsProps> = () => {
     return (
-        <Container centerContent height="100%">
+        <Container
+            centerContent
+            height="100%"
+            width="100%"
+            maxWidth="100%"
+            padding={0}
+            overflowY="auto"
+        >
             <Heading
                 textColor="primary.300"
                 textAlign="center"
@@ -30,7 +37,7 @@ const LearnRights: FC<LearnRightsProps> = () => {
                 Your rights and what to do in a police encounter
             </Heading>
 
-            <Accordion width="inherit" allowMultiple>
+            <Accordion width="40%" allowMultiple height="100%">
                 <AccordionItem>
                     <h2>
                         <AccordionButton>

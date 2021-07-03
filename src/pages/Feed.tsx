@@ -93,7 +93,6 @@ const Feed: FC<FeedProps> = ({ match }) => {
                 width="100%"
                 maxWidth="100%"
                 height="100%"
-                maxHeight="100%"
                 alignItems="center"
                 flexDirection="column"
                 overflowX="hidden"
@@ -119,6 +118,7 @@ const NoPosts: FC = () => {
             display="flex"
             alignItems="center"
             justifyContent="center"
+            height="100%"
         >
             <HStack>
                 <CreatePostImg />
