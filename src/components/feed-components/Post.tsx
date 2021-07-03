@@ -99,7 +99,6 @@ const Post: FC<PostProps> = ({ post }) => {
             border="solid"
             borderColor="other.400"
             borderRadius={'10px'}
-            margin="0"
             padding="24px"
             marginTop="2%"
         >
