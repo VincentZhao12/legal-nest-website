@@ -23,7 +23,12 @@ const Homepage: FC<HomepageProps> = () => {
     }, [currentUser, history]);
 
     return (
-        <Flex direction={['column', 'row']} color="white">
+        <Flex
+            direction={['column', 'row']}
+            color="white"
+            height="100%"
+            maxHeight="100%"
+        >
             <Center flex="5" color="white">
                 <VStack>
                     <Text fontSize="3xl" color="primary.500" fontWeight="bold">

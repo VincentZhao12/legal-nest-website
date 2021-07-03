@@ -100,6 +100,8 @@ const Feed: FC<FeedProps> = ({ match }) => {
             <Container
                 width="100%"
                 maxWidth="100%"
+                height="100%"
+                maxHeight="100%"
                 alignItems="center"
                 flexDirection="column"
                 overflowX="hidden"
