@@ -96,7 +96,6 @@ const Feed: FC<FeedProps> = ({ match }) => {
                 alignItems="center"
                 flexDirection="column"
                 overflowX="hidden"
-                mb="24px"
                 overflowY="auto"
             >
                 <Stack width="100%" justifyContent="center" alignItems="center">
