@@ -14,6 +14,12 @@ import {
     Flex,
     Spacer,
     IconButton,
+    AlertDialogOverlay,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { PostType } from '../../pages/Feed';
@@ -82,8 +88,6 @@ const Post: FC<PostProps> = ({ post }) => {
             supporters,
         });
 
-        console.log(supports, supporters);
-
         setLoading(false);
 
         setSupportsDisplay(supports);
@@ -91,7 +95,7 @@ const Post: FC<PostProps> = ({ post }) => {
 
     return (
         <Box
-            width={isLargerThan62em ? '90%' : '100%'}
+            width={isLargerThan62em ? '60%' : '100%'}
             border="solid"
             borderColor="other.400"
             borderRadius={'10px'}
@@ -106,21 +110,26 @@ const Post: FC<PostProps> = ({ post }) => {
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <IconButton
-                        onClick={handleClick}
-                        icon={
-                            <Icon
-                                as={supported ? AiFillHeart : AiOutlineHeart}
-                                fill="danger.300"
-                                width="40px"
-                                height="40px"
-                            />
-                        }
-                        bg="inherit"
-                        aria-label="Support"
-                        disabled={loading}
-                    />
-
+                    {currentUser ? (
+                        <IconButton
+                            onClick={handleClick}
+                            icon={
+                                <Icon
+                                    as={
+                                        supported ? AiFillHeart : AiOutlineHeart
+                                    }
+                                    fill="danger.300"
+                                    width="40px"
+                                    height="40px"
+                                />
+                            }
+                            bg="inherit"
+                            aria-label="Support"
+                            disabled={loading}
+                        />
+                    ) : (
+                        <NotLoggedInButton />
+                    )}
                     <Text mr="8px" fontSize="3xl">
                         {supportsDisplay}
                     </Text>
@@ -206,6 +215,71 @@ const Post: FC<PostProps> = ({ post }) => {
                 </ModalContent>
             </Modal>
         </Box>
+    );
+};
+
+const NotLoggedInButton = () => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    const onClose = () => setIsOpen(false);
+    const cancelRef = React.useRef<any>(null);
+    return (
+        <>
+            <IconButton
+                onClick={() => setIsOpen(true)}
+                icon={
+                    <Icon
+                        as={AiOutlineHeart}
+                        fill="danger.300"
+                        width="40px"
+                        height="40px"
+                    />
+                }
+                bg="inherit"
+                aria-label="Support"
+            />
+
+            <AlertDialog
+                isOpen={isOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Please Log In
+                        </AlertDialogHeader>
+
+                        <AlertDialogBody>
+                            You need an account to support posts.
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button
+                                colorScheme="secondary"
+                                onClick={onClose}
+                                ml={3}
+                                as={Link}
+                                to="/login"
+                            >
+                                Log In
+                            </Button>
+                            <Button
+                                colorScheme="primary"
+                                onClick={onClose}
+                                ml={3}
+                                as={Link}
+                                to="/signup"
+                            >
+                                Sign Up
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
+        </>
     );
 };
 
