@@ -37,6 +37,9 @@ import { ReactComponent as ExitIcon } from '../images/exit.svg';
 import { ReactComponent as PostIcon } from '../images/post.svg';
 import CreatePost from '../pages/CreatePost';
 import { ReactComponent as Logo } from '../images/logo.svg';
+import { useEffect } from 'react';
+import { db } from '../firebase';
+import { useState } from 'react';
 
 export default function WithSubnavigation() {
     const { isOpen, onToggle } = useDisclosure();
@@ -45,6 +48,18 @@ export default function WithSubnavigation() {
     const { onOpen, onClose } = modalDisclosure;
     const { currentUser, logout } = useAuth();
     const history = useHistory();
+
+    const [username, setUsername] = useState<string>()
+
+    useEffect(() => {
+        const fetchUsername = async() => {
+            const userDoc = await db.collection('users').doc(currentUser?.uid || '').get();
+            setUsername(userDoc.data()?.screenName);
+        }
+        if(currentUser)
+            fetchUsername();
+    }, [currentUser])
+
 
     return (
         <>
@@ -125,6 +140,9 @@ export default function WithSubnavigation() {
                                         }
                                     />
                                     <MenuList>
+                                        <MenuItem cursor="default!important" isDisabled={true}>
+                                            <Text>{username}</Text>
+                                        </MenuItem>
                                         <MenuItem
                                             onClick={() =>
                                                 history.push(
