@@ -52,28 +52,32 @@ const Feed: FC<FeedProps> = ({ match }) => {
             postDocs = db.collection('posts').where('creator', '==', user);
         else postDocs = db.collection('posts');
         (async () => {
-            const [snapshot, userSnap] = await Promise.all([
-                postDocs.get(),
-                user ? db.collection('users').doc(user).get() : undefined,
-            ]);
+            try {
+                const [snapshot, userSnap] = await Promise.all([
+                    postDocs.get(),
+                    user ? db.collection('users').doc(user).get() : undefined,
+                ]);
 
-            const posts: PostType[] = snapshot.docs.map((doc) => ({
-                creator: doc.data().creator,
-                description: doc.data().description,
-                posted: doc.data().posted,
-                supports: doc.data().supports,
-                title: doc.data().title,
-                video: doc.data().video,
-                id: doc.id,
-                supporters: doc.data().supporters,
-                eventDate: doc.data().eventDate,
-            }));
+                const posts: PostType[] = snapshot.docs.map((doc) => ({
+                    creator: doc.data().creator,
+                    description: doc.data().description,
+                    posted: doc.data().posted,
+                    supports: doc.data().supports,
+                    title: doc.data().title,
+                    video: doc.data().video,
+                    id: doc.id,
+                    supporters: doc.data().supporters,
+                    eventDate: doc.data().eventDate,
+                }));
 
-            setUsername(userSnap?.data()?.screenName || '');
+                setUsername(userSnap?.data()?.screenName || '');
 
-            posts.sort((post1, post2) => post2.supports - post1.supports);
+                posts.sort((post1, post2) => post2.supports - post1.supports);
 
-            setPosts(posts);
+                setPosts(posts);
+            } catch (error) {
+                console.warn(error);
+            }
         })().then(() => setLoading(false));
     }, [user]);
 

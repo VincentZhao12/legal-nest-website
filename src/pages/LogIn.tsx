@@ -77,7 +77,7 @@ const LogIn: FC<LogInProps> = () => {
                 <Box rounded={'lg'} boxShadow={'lg'} p={8} minWidth="xs">
                     <Stack spacing={4}>
                         <form onSubmit={handleSubmit}>
-                            <FormControl id="email">
+                            <FormControl marginBottom="16px" id="email">
                                 <FormLabel>Email address</FormLabel>
                                 <Input
                                     type="email"
@@ -85,7 +85,7 @@ const LogIn: FC<LogInProps> = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </FormControl>
-                            <FormControl id="password">
+                            <FormControl marginBottom="16px" id="password">
                                 <FormLabel>Password</FormLabel>
                                 <Input
                                     type="password"

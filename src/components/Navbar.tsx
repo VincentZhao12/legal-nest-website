@@ -49,17 +49,22 @@ export default function WithSubnavigation() {
     const { currentUser, logout } = useAuth();
     const history = useHistory();
 
-    const [username, setUsername] = useState<string>()
+    const [username, setUsername] = useState<string>();
 
     useEffect(() => {
-        const fetchUsername = async() => {
-            const userDoc = await db.collection('users').doc(currentUser?.uid || '').get();
-            setUsername(userDoc.data()?.screenName);
-        }
-        if(currentUser)
-            fetchUsername();
-    }, [currentUser])
-
+        const fetchUsername = async () => {
+            try {
+                const userDoc = await db
+                    .collection('users')
+                    .doc(currentUser?.uid || '')
+                    .get();
+                setUsername(userDoc.data()?.screenName);
+            } catch (e) {
+                console.warn(e);
+            }
+        };
+        if (currentUser) fetchUsername();
+    }, [currentUser]);
 
     return (
         <>
@@ -140,7 +145,10 @@ export default function WithSubnavigation() {
                                         }
                                     />
                                     <MenuList>
-                                        <MenuItem cursor="default!important" isDisabled={true}>
+                                        <MenuItem
+                                            cursor="default!important"
+                                            isDisabled={true}
+                                        >
                                             <Text>{username}</Text>
                                         </MenuItem>
                                         <MenuItem
