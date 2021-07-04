@@ -39,7 +39,7 @@ const Homepage: FC<HomepageProps> = () => {
                     <HStack>
                         <Button
                             onClick={() => {
-                                history.push('/signin');
+                                history.push('/login');
                             }}
                             colorScheme="secondary"
                         >
