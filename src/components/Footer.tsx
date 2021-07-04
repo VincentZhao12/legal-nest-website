@@ -8,7 +8,7 @@ const Footer: FC = () => {
         <Box
             as="footer"
             role="contentinfo"
-            padding="16px"
+            padding="8px"
             backgroundColor="secondary.400"
             // style={{
             //     position: 'absolute',
