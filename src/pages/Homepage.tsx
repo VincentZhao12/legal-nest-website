@@ -65,7 +65,7 @@ const Homepage: FC<HomepageProps> = () => {
                         borderRadius={['0% 0% 0% 0%', '5% 0% 0% 5%']}
                         bg="secondary.500"
                     >
-                        <Landing style={{ top: '0px' }} />
+                        <Landing style={{ top: '0px', width: "200px", height: "200px" }} />
                         <Text flex="1" fontSize="3xl" fontWeight="bold">
                             What is Legal Nest?
                         </Text>
