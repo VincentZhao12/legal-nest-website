@@ -42,6 +42,46 @@ const LearnRights: FC<LearnRightsProps> = () => {
                     <h2>
                         <AccordionButton>
                             <Box flex="1" textAlign="left" fontWeight="bold">
+                                What are my rights if I’m pulled over by the
+                                police?
+                            </Box>
+                            <AccordionIcon />
+                        </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4}>
+                        It is critical that you remain calm if you are pulled
+                        over by the police while driving your car. Pull over as
+                        soon as it's safe, ensuring that you are not in the way
+                        of oncoming traffic, and turn off your engine. If you're
+                        the driver, turn on the interior light, open the window
+                        partially, and place your hands on the steering wheel.
+                        Passengers should keep their hands visible at all times.
+                        <br />
+                        <br />
+                        It's critical to be cool and avoid making any unexpected
+                        moves since the police are ready to respond at any time
+                        if they suspect they're in danger. Keep your hands
+                        visible to the officer and offer any relevant documents
+                        upon request, but only after they have asked for them.
+                        Reaching into your pocket or glove compartment without
+                        permission could lead to a confrontation.
+                        <br />
+                        <br />
+                        If you suspect your rights have been violated, memorize
+                        or write down badge or patrol car numbers, as well as
+                        witness contact information. It is legal for you to
+                        record video in order to do so. While the legal idea of
+                        "qualified immunity"—which states that officers can only
+                        be held liable for actions that violate "clearly
+                        established" federal law—makes it difficult for
+                        civilians to win cases against cops, don't let that
+                        deter you from reporting any misconduct you witness.
+                    </AccordionPanel>
+                </AccordionItem>
+                <AccordionItem>
+                    <h2>
+                        <AccordionButton>
+                            <Box flex="1" textAlign="left" fontWeight="bold">
                                 May I record the police during an interaction?
                             </Box>
                             <AccordionIcon />
@@ -100,46 +140,6 @@ const LearnRights: FC<LearnRightsProps> = () => {
                         one of those gray areas of law enforcement that has been
                         a source of controversy and friction in many
                         communities.
-                    </AccordionPanel>
-                </AccordionItem>
-                <AccordionItem>
-                    <h2>
-                        <AccordionButton>
-                            <Box flex="1" textAlign="left" fontWeight="bold">
-                                What are my rights if I’m pulled over by the
-                                police?
-                            </Box>
-                            <AccordionIcon />
-                        </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>
-                        It is critical that you remain calm if you are pulled
-                        over by the police while driving your car. Pull over as
-                        soon as it's safe, ensuring that you are not in the way
-                        of oncoming traffic, and turn off your engine. If you're
-                        the driver, turn on the interior light, open the window
-                        partially, and place your hands on the steering wheel.
-                        Passengers should keep their hands visible at all times.
-                        <br />
-                        <br />
-                        It's critical to be cool and avoid making any unexpected
-                        moves since the police are ready to respond at any time
-                        if they suspect they're in danger. Keep your hands
-                        visible to the officer and offer any relevant documents
-                        upon request, but only after they have asked for them.
-                        Reaching into your pocket or glove compartment without
-                        permission could lead to a confrontation.
-                        <br />
-                        <br />
-                        If you suspect your rights have been violated, memorize
-                        or write down badge or patrol car numbers, as well as
-                        witness contact information. It is legal for you to
-                        record video in order to do so. While the legal idea of
-                        "qualified immunity"—which states that officers can only
-                        be held liable for actions that violate "clearly
-                        established" federal law—makes it difficult for
-                        civilians to win cases against cops, don't let that
-                        deter you from reporting any misconduct you witness.
                     </AccordionPanel>
                 </AccordionItem>
                 <AccordionItem>
