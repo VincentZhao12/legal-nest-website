@@ -49,11 +49,15 @@ const Post: FC<PostProps> = ({ post }) => {
 
     useEffect(() => {
         const getUsername = async () => {
-            const userDoc = await db
-                .collection('users')
-                .doc(post.creator)
-                .get();
-            setUsername(userDoc.data()?.screenName);
+            try {
+                const userDoc = await db
+                    .collection('users')
+                    .doc(post.creator)
+                    .get();
+                setUsername(userDoc.data()?.screenName);
+            } catch (error) {
+                console.warn(error);
+            }
         };
         if (post.supporters?.includes(currentUser?.uid || '')) {
             setSupported(true);
@@ -63,34 +67,37 @@ const Post: FC<PostProps> = ({ post }) => {
     }, [post, currentUser]);
 
     const handleClick = async () => {
-        setSupported(!supported);
-        setLoading(true);
+        try {
+            setSupported(!supported);
+            setLoading(true);
+            const postDoc = await db.collection('posts').doc(post.id).get();
+            let supports = postDoc?.data()?.supports;
+            let supporters = postDoc?.data()?.supporters;
 
-        const postDoc = await db.collection('posts').doc(post.id).get();
-        let supports = postDoc?.data()?.supports;
-        let supporters = postDoc?.data()?.supporters;
+            if (supported) {
+                supports--;
 
-        if (supported) {
-            supports--;
+                const index = supporters.indexOf(currentUser?.uid || '');
+                if (index > -1) {
+                    supporters.splice(index, 1);
+                }
+            } else {
+                supports++;
 
-            const index = supporters.indexOf(currentUser?.uid || '');
-            if (index > -1) {
-                supporters.splice(index, 1);
+                if (currentUser) supporters.push(currentUser.uid);
             }
-        } else {
-            supports++;
 
-            if (currentUser) supporters.push(currentUser.uid);
+            db.collection('posts').doc(post.id).update({
+                supports: supporters.length,
+                supporters,
+            });
+
+            setLoading(false);
+
+            setSupportsDisplay(supports);
+        } catch (error) {
+            console.warn(error);
         }
-
-        db.collection('posts').doc(post.id).update({
-            supports: supporters.length,
-            supporters,
-        });
-
-        setLoading(false);
-
-        setSupportsDisplay(supports);
     };
 
     return (

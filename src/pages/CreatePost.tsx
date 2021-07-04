@@ -51,17 +51,21 @@ const CreatePost: FC<CreatePostProps> = ({ onClose, postData, postId }) => {
         if (!currentUser) history.push('/');
 
         const getUserVideos = async () => {
-            const folderRef = storage.ref().child(`/${currentUser?.uid}`);
+            try {
+                const folderRef = storage.ref().child(`/${currentUser?.uid}`);
 
-            const itemsRef = await folderRef.listAll();
+                const itemsRef = await folderRef.listAll();
 
-            const videoUrls = await Promise.all(
-                itemsRef.items.map(
-                    async (video) => await video.getDownloadURL(),
-                ),
-            );
+                const videoUrls = await Promise.all(
+                    itemsRef.items.map(
+                        async (video) => await video.getDownloadURL(),
+                    ),
+                );
 
-            setUserVideos(videoUrls || []);
+                setUserVideos(videoUrls || []);
+            } catch (error) {
+                console.warn(error);
+            }
         };
 
         getUserVideos();
@@ -111,7 +115,7 @@ const CreatePost: FC<CreatePostProps> = ({ onClose, postData, postId }) => {
                 });
             }
         } catch (e) {
-            console.log(e);
+            console.warn(e);
         }
 
         if (postData) setSelectedVideo(postData.video);
@@ -193,7 +197,9 @@ const CreatePost: FC<CreatePostProps> = ({ onClose, postData, postId }) => {
                                         onChange={(e) => setSelectedVideo(e)}
                                         value={selectedVideo}
                                     >
-                                        <Radio mb={8} value="">None</Radio>
+                                        <Radio mb={8} value="">
+                                            None
+                                        </Radio>
                                         {userVideos?.map((video) => (
                                             <Radio
                                                 value={video}
