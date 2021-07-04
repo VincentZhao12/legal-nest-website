@@ -9,7 +9,7 @@ const Footer: FC = () => {
             as="footer"
             role="contentinfo"
             padding="16px"
-            backgroundColor="secondary.300"
+            backgroundColor="secondary.400"
             // style={{
             //     position: 'absolute',
             //     top: "100vh",

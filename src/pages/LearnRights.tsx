@@ -42,34 +42,6 @@ const LearnRights: FC<LearnRightsProps> = () => {
                     <h2>
                         <AccordionButton>
                             <Box flex="1" textAlign="left" fontWeight="bold">
-                                May an officer search me?
-                            </Box>
-                            <AccordionIcon />
-                        </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>
-                        If you are not under arrest or if the police do not have
-                        a legal warrant, they may not search you. If you refuse
-                        to submit to an unjustified search and they go ahead
-                        with it anyway, anything they find—even if it's
-                        incriminating—may be thrown out. The Fourth Amendment to
-                        the Constitution guarantees that no one can be searched
-                        or seized without a warrant. <br />
-                        <br />
-                        However, if the police have reasonable suspicion that
-                        you are carrying a weapon, they may pat you down through
-                        your clothing (without a warrant or arrest). Since the
-                        rationale for a pat down often comes down to the
-                        officer's word vs the individual who was patted, this is
-                        one of those gray areas of law enforcement that has been
-                        a source of controversy and friction in many
-                        communities.
-                    </AccordionPanel>
-                </AccordionItem>
-                <AccordionItem>
-                    <h2>
-                        <AccordionButton>
-                            <Box flex="1" textAlign="left" fontWeight="bold">
                                 May I record the police during an interaction?
                             </Box>
                             <AccordionIcon />
@@ -100,6 +72,34 @@ const LearnRights: FC<LearnRightsProps> = () => {
                         the request escalates or becomes a demand, your best
                         choice may be to cooperate (to avoid further escalation)
                         and then file a police misconduct claim later.
+                    </AccordionPanel>
+                </AccordionItem>
+                <AccordionItem>
+                    <h2>
+                        <AccordionButton>
+                            <Box flex="1" textAlign="left" fontWeight="bold">
+                                May an officer search me?
+                            </Box>
+                            <AccordionIcon />
+                        </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4}>
+                        If you are not under arrest or if the police do not have
+                        a legal warrant, they may not search you. If you refuse
+                        to submit to an unjustified search and they go ahead
+                        with it anyway, anything they find—even if it's
+                        incriminating—may be thrown out. The Fourth Amendment to
+                        the Constitution guarantees that no one can be searched
+                        or seized without a warrant. <br />
+                        <br />
+                        However, if the police have reasonable suspicion that
+                        you are carrying a weapon, they may pat you down through
+                        your clothing (without a warrant or arrest). Since the
+                        rationale for a pat down often comes down to the
+                        officer's word vs the individual who was patted, this is
+                        one of those gray areas of law enforcement that has been
+                        a source of controversy and friction in many
+                        communities.
                     </AccordionPanel>
                 </AccordionItem>
                 <AccordionItem>
