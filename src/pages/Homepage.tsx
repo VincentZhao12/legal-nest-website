@@ -29,7 +29,7 @@ const Homepage: FC<HomepageProps> = () => {
             height="100%"
             maxHeight="100%"
             overflow="auto"
-            paddingBottom="10px"
+            paddingBottom="20px"
         >
             <Center flex="5" color="white">
                 <VStack>

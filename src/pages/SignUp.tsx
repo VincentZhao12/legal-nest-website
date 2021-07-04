@@ -73,7 +73,12 @@ const Signup: FC<SignupProps> = () => {
     };
 
     return (
-        <VStack align={'center'} justify={'center'} height="100%">
+        <VStack
+            align={'center'}
+            justify={'center'}
+            height="100%"
+            overflow="auto"
+        >
             {error && (
                 <Stack align={'center'}>
                     <Alert status="error" width={'md'} alignItems="center">
